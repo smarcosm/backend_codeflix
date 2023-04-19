@@ -1,6 +1,8 @@
 package com.smarcosm.admin_catalogo.domain.category;
 
-import com.smarcosm.admin_catalogo.domain.category.Category;
+import com.smarcosm.admin_catalogo.domain.exception.DomainException;
+import com.smarcosm.admin_catalogo.domain.validation.handler.ThrowsValidationHandler;
+import com.smarcosm.admin_catalogo.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -37,10 +39,10 @@ public class CategoryTest {
         final var actualCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
         final var actualException =
-                Assertions.assertThrows(DomainException.class, () -> actualCategory.validate());
+                Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
 
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0));
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
     }
 }

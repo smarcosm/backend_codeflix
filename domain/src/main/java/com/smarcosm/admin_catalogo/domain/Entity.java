@@ -1,5 +1,6 @@
 package com.smarcosm.admin_catalogo.domain;
 
+import com.smarcosm.admin_catalogo.domain.validation.ValidationHandler;
 import com.sun.source.tree.IdentifierTree;
 
 import java.util.Objects;
@@ -11,6 +12,7 @@ public abstract class Entity<ID extends Identifier> {
         Objects.requireNonNull(id, "'id' should not be null");
         this.id = id;
     }
+    public abstract void validate(ValidationHandler handler);
     public ID getId(){
         return id;
     }
