@@ -2,6 +2,7 @@ package com.smarcosm.admin_catalogo.domain.category;
 
 import com.smarcosm.admin_catalogo.domain.AggregateRoot;
 import com.smarcosm.admin_catalogo.domain.validation.ValidationHandler;
+import com.smarcosm.admin_catalogo.domain.validation.handler.ThrowsValidationHandler;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -54,6 +55,21 @@ public class Category extends AggregateRoot<CategoryID> {
         }
 
         this.active = false;
+        this.updatedAt = Instant.now();
+        return this;
+    }
+    public Category update(
+            final String aName,
+            final String aDescription,
+            final boolean isActive
+    ) {
+        if (isActive){
+            activate();
+        }else {
+            deactivate();
+        }
+        this.name = aName;
+        this.description = aDescription;
         this.updatedAt = Instant.now();
         return this;
     }
