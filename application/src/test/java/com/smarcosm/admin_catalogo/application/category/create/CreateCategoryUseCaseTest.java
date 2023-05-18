@@ -25,12 +25,12 @@ public class CreateCategoryUseCaseTest {
        final CategoryGateway categoryGateway = Mockito.mock(CategoryGateway.class);
        Mockito.when(categoryGateway.create(Mockito.any())).thenAnswer(returnsFirstArg());
 
-       final var useCase = new CreateCategoryUseCase(categoryGateway);
+       final var useCase = new DefaultCreateCategoryUseCase(categoryGateway);
 
-      final var actulOutput = useCase.execute(aCommand);
+      final var actualOutput = useCase.execute(aCommand);
 
-        Assertions.assertNotNull(actulOutput);
-        Assertions.assertNotNull(actulOutput.getId());
+        Assertions.assertNotNull(actualOutput);
+        Assertions.assertNotNull(actualOutput.id());
 
         Mockito.verify(categoryGateway, Mockito.times(1))
                 .create(Mockito.argThat(aCategory -> {
