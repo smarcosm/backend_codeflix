@@ -39,7 +39,7 @@ public class CategoryTest {
                                 () -> actualCategory.validate(new ThrowsValidationHandler()));
 
                 Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-                Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).getMessage());
+                Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
         }
 
@@ -56,7 +56,7 @@ public class CategoryTest {
                                 () -> actualCategory.validate(new ThrowsValidationHandler()));
 
                 Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-                Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).getMessage());
+                Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
         }
 
@@ -73,7 +73,7 @@ public class CategoryTest {
                                 () -> actualCategory.validate(new ThrowsValidationHandler()));
 
                 Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-                Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).getMessage());
+                Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
         }
 
@@ -95,7 +95,7 @@ public class CategoryTest {
                                 () -> actualCategory.validate(new ThrowsValidationHandler()));
 
                 Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-                Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).getMessage());
+                Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
         }
 

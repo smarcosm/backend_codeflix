@@ -4,6 +4,7 @@ import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import com.smarcosm.admin_catalogo.domain.validation.handler.Notification;
 import com.smarcosm.admin_catalogo.domain.validation.handler.ThrowsValidationHandler;
+import io.vavr.control.Either;
 
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase{
     }
 
     @Override
-    public CreateCategoryOutput execute(final CreateCategoryCommand aCommand){
+    public Either<Notification, CreateCategoryOutput> execute(final CreateCategoryCommand aCommand){
         final var aName = aCommand.name();
         final var aDescription = aCommand.description();
         final var isActive = aCommand.isActive();
