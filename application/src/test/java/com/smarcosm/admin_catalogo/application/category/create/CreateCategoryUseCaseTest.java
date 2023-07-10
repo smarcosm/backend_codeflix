@@ -24,6 +24,9 @@ public class CreateCategoryUseCaseTest {
     private CategoryGateway categoryGateway;
 
     // 1. Teste do caminho feliz
+    // 2. Teste passando um propriedade inválida (name)
+    // 3. Teste criando uma categoria inativa
+    // 4. Teste simulando um erro generico vindo do gateway
     @Test
     public void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId() {
         final var expectedName = "Filmes";
@@ -55,7 +58,7 @@ public class CreateCategoryUseCaseTest {
                 ));
     }
 
-    // 2. Teste passando um propriedade inválida (name)
+
     @Test
     public void givenAInvalidName_whenCallsCreateCategory_thenShouldReturnDomainException() {
         final String expectedName = null;
@@ -76,7 +79,7 @@ public class CreateCategoryUseCaseTest {
         Mockito.verify(categoryGateway, times(0)).create(Mockito.any());
     }
 
-    // 3. Teste criando uma categoria inativa
+
     @Test
     public void givenAValidCommandWithInactiveCategory_whenCallsCreateCategory_shouldReturnInactiveCategoryId() {
         final var expectedName = "Filmes";
@@ -106,7 +109,7 @@ public class CreateCategoryUseCaseTest {
                 ));
     }
 
-    // 4. Teste simulando um erro generico vindo do gateway
+
     @Test
     public void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnException() {
         final var expectedName = "Filmes";
