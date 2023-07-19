@@ -1,5 +1,6 @@
 package com.smarcosm.admin_catalogo.application.category.create;
 
+import com.smarcosm.admin_catalogo.application.category.retrieve.get.CategoryOutput;
 import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import com.smarcosm.admin_catalogo.domain.validation.handler.Notification;
@@ -31,6 +32,8 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
 
         return notification.hasError() ? Left(notification) : create(aCategory);
     }
+
+
 
     private Either<Notification, CreateCategoryOutput> create(final Category aCategory) {
         return Try(() -> this.categoryGateway.create(aCategory))

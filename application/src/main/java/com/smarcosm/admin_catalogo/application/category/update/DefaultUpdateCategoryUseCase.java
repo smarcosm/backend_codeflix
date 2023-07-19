@@ -1,5 +1,6 @@
 package com.smarcosm.admin_catalogo.application.category.update;
 
+import com.smarcosm.admin_catalogo.application.category.retrieve.get.CategoryOutput;
 import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
@@ -36,6 +37,7 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase{
         aCategory.update(aName, aDescription, isActive).validate(notification);
         return notification.hasError() ? Left(notification) : update(aCategory);
     }
+
 
     private Either<Notification, UpdateCategoryOutput> update(final Category aCategory) {
         return Try(() -> this.categoryGateway.update(aCategory))

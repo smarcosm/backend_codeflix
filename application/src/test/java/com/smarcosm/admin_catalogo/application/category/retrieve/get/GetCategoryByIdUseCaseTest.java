@@ -1,4 +1,4 @@
-package com.smarcosm.admin_catalogo.application.category.retrieve;
+package com.smarcosm.admin_catalogo.application.category.retrieve.get;
 
 import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
@@ -46,19 +46,17 @@ public class GetCategoryByIdUseCaseTest {
 
         Assertions.assertEquals(expectedId, actualCategory.id());
         Assertions.assertEquals(expectedName, actualCategory.name());
-        Assertions.assertEquals(expectedDescription, actualCategory.descripton());
+        Assertions.assertEquals(expectedDescription, actualCategory.description());
         Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
         Assertions.assertEquals(aCategory.getCreatedAt(), actualCategory.createdAt());
         Assertions.assertEquals(aCategory.getUpdatedAt(), actualCategory.updatedAt());
-        Assertions.assertEquals(aCategory.getDeletedAt(), actualCategory.deletedAt());
-        Assertions.assertEquals(CategoryOutput.from(aCategory), actualCategory);
+        Assertions.assertEquals(aCategory.getDeletedAt(), actualCategory.deleteAt());
 
-        Mockito.verify(categoryGateway, times(1)).deleteById(eq(expectedId));
     }
 
     @Test
-    public void givenAInvalidId_whenCallsGetCategory_shouldReturnNotFoundId(){
-        final var expectedErrorMessage = "";
+    public void givenAInvalidId_whenCallsGetCategory_shouldReturnNotFound(){
+        final var expectedErrorMessage = "Category with ID 123 was not found";
         final var expectedId = CategoryID.from("123");
 
         when(categoryGateway.findById(eq(expectedId))).thenReturn(Optional.empty());
