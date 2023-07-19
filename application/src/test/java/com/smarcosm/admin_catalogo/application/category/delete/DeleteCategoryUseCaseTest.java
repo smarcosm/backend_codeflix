@@ -6,13 +6,15 @@ import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-
+@ExtendWith(MockitoExtension.class)
 public class DeleteCategoryUseCaseTest {
     @InjectMocks
     private DefaultDeleteCategoryUseCase useCase;
@@ -31,7 +33,7 @@ public class DeleteCategoryUseCaseTest {
 
         doNothing().when(categoryGateway).deleteById(eq(expectedId));
 
-        Assertions.assertDoesNotThrow(() -> useCase.excute(expectedId.getValue()));
+        Assertions.assertDoesNotThrow(() -> useCase.execute(expectedId.getValue()));
 
         Mockito.verify(categoryGateway, times(1)).deleteById(eq(expectedId));
     }
@@ -43,7 +45,7 @@ public class DeleteCategoryUseCaseTest {
 
         doNothing().when(categoryGateway).deleteById(eq(expectedId));
 
-        Assertions.assertDoesNotThrow(() -> useCase.excute(expectedId.getValue()));
+        Assertions.assertDoesNotThrow(() -> useCase.execute(expectedId.getValue()));
 
         Mockito.verify(categoryGateway, times(1)).deleteById(eq(expectedId));
     }
@@ -55,7 +57,7 @@ public class DeleteCategoryUseCaseTest {
         doThrow(new IllegalStateException("Gateway error"))
                 .when(categoryGateway).deleteById(eq(expectedId));
 
-        Assertions.assertDoesNotThrow(() -> useCase.excute(expectedId.getValue()));
+        Assertions.assertThrows(IllegalStateException.class, () -> useCase.execute(expectedId.getValue()));
 
         Mockito.verify(categoryGateway, times(1)).deleteById(eq(expectedId));
     }
