@@ -14,15 +14,19 @@ bootJar{
     archiveFileName = 'application.war'
     destinationDirectory.set(file("${rootProject.buildDir}/libs"))
 }
-
 dependencies {
     implementation(project(":domain"))
     implementation(project(":application"))
-   implementation('org.springframework.boot:spring-boot-starter-web'){
-       exclude module: 'spring-boot-starter-tomcat'
-   }
-   implementation('org.springframework.boot:spring-boot-starter-undertow')
-   implementation('org.springframework.boot:spring-boot-starter-test')
+
+    implementation('mysql:mysql-connector-java:8.0.33')
+
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    implementation('org.springframework.boot:spring-boot-starter-undertow')
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa:3.0.4')
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
 test {
