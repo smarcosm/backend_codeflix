@@ -5,6 +5,7 @@ import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.domain.category.CategorySearchQuery;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
+import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryJpaEntity;
 import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,8 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public Category create(Category aCategory) {
-        return null;
+    public Category create(final Category aCategory) {
+        return this.repository.save(CategoryJpaEntity.from(aCategory)).toAggregate();
     }
 
     @Override

@@ -40,7 +40,7 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(aCategory.getId(), actualCategory.getId());
         Assertions.assertEquals(expectedName, actualCategory.getName());
         Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
-        Assertions.assertEquals(expectedIsActive, actualCategory.activate());
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
         Assertions.assertEquals(aCategory.getCreatedAt(), actualCategory.getCreatedAt());
         Assertions.assertEquals(aCategory.getUpdatedAt(), actualCategory.getUpdatedAt());
         Assertions.assertEquals(aCategory.getDeletedAt(), actualCategory.getDeletedAt());
