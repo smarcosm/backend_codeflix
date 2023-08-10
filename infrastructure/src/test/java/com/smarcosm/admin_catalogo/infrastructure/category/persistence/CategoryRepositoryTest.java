@@ -27,6 +27,7 @@ public class CategoryRepositoryTest {
         final var actualException = Assertions.assertThrows(DataIntegrityViolationException.class, () -> categoryRepository.save(anEntity));
 
         final var actualCause = Assertions.assertInstanceOf(PropertyValueException.class, actualException.getCause());
+
         Assertions.assertEquals(expectedPropertyName, actualCause.getPropertyName());
         Assertions.assertEquals(expectedPropertyMessage, actualCause.getMessage());
 

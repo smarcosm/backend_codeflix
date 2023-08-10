@@ -1,11 +1,14 @@
 package com.smarcosm.admin_catalogo.infrastructure.category;
 
 import com.smarcosm.admin_catalogo.domain.category.Category;
+import com.smarcosm.admin_catalogo.domain.category.CategoryID;
+import com.smarcosm.admin_catalogo.infrastructure.MySQLGatewayTest;
 import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryJpaEntity;
 import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+@MySQLGatewayTest
 public class CategoryMySQLGatewayTest {
     @Autowired
     private CategoryMySQLGateway categoryGateway;
@@ -43,7 +46,6 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(aCategory.getDeletedAt(), actualEntity.getDeletedAt());
         Assertions.assertNull(actualCategory.getDeletedAt());
     }
-
     @Test
     public void givenAValidCategory_whenCallsUpdate_shouldReturnCategoryUpdated(){
         final var expectedName = "Filmes";
@@ -53,15 +55,13 @@ public class CategoryMySQLGatewayTest {
         final var aCategory = Category.newCategory("Film", null, expectedIsActive);
 
         Assertions.assertEquals(0, categoryRepository.count());
-
-        categoryRepository.save(CategoryJpaEntity.from(aCategory));
+        categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
         Assertions.assertEquals(1, categoryRepository.count());
 
-        final var aUpdateCategory = aCategory.clone();
+        final var aUpdateCategory = aCategory.clone()
+                .update(expectedName, expectedDescription, expectedIsActive);
         final var actualCategory = categoryGateway.update(aUpdateCategory);
-
         Assertions.assertEquals(1, categoryRepository.count());
-
 
         Assertions.assertEquals(aCategory.getId(), actualCategory.getId());
         Assertions.assertEquals(expectedName, actualCategory.getName());
@@ -82,5 +82,24 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertTrue(aCategory.getUpdatedAt().isBefore(actualCategory.getUpdatedAt()));
         Assertions.assertEquals(aCategory.getDeletedAt(), actualEntity.getDeletedAt());
         Assertions.assertNull(actualCategory.getDeletedAt());
+    }
+
+    @Test
+    public void givenAPrePersistedCategoryAndValidCategoryId_whenTryToDeleteIt_shouldDeleteCategory(){
+        final var aCategory = Category.newCategory("Filmes", null, true);
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
+        Assertions.assertEquals(1, categoryRepository.count());
+        
+        categoryGateway.deleteById(aCategory.getId());
+        Assertions.assertEquals(0, categoryRepository.count());
+    }
+    @Test
+    public void givenInvalidCategoryId_whenTryToDeleteIt_shouldDeleteCategory(){
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        categoryGateway.deleteById(CategoryID.from("invalid"));
+        Assertions.assertEquals(0, categoryRepository.count());
     }
 }
