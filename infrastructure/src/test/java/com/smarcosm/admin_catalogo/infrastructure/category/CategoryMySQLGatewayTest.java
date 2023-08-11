@@ -91,7 +91,7 @@ public class CategoryMySQLGatewayTest {
 
         categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
         Assertions.assertEquals(1, categoryRepository.count());
-        
+
         categoryGateway.deleteById(aCategory.getId());
         Assertions.assertEquals(0, categoryRepository.count());
     }
