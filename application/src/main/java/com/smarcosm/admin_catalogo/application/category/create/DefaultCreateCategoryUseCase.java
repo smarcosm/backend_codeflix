@@ -6,6 +6,7 @@ import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import com.smarcosm.admin_catalogo.domain.validation.handler.Notification;
 import io.vavr.control.Either;
 
+
 import java.util.Objects;
 
 import static io.vavr.API.Left;
