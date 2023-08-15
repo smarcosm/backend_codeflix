@@ -3,7 +3,7 @@ package com.smarcosm.admin_catalogo.infrastructure.category;
 import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.domain.category.CategorySearchQuery;
-import com.smarcosm.admin_catalogo.infrastructure.MySQLGatewayTest;
+import com.smarcosm.admin_catalogo.MySQLGatewayTest;
 import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryJpaEntity;
 import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
