@@ -7,6 +7,7 @@ import com.smarcosm.admin_catalogo.application.category.create.CreateCategoryUse
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CreateCategoryApiInput;
 import io.vavr.API;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,18 +40,18 @@ public class CategoryAPITest {
         final var aInput =
               new  CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
         Mockito.when(createCategoryUseCase.execute(any()))
-                .thenReturn(API.Right(CreateCategoryOutput.from(CategoryID.from("123"))));
+                .thenReturn(API.Right(CreateCategoryOutput.from("123")));
         final var request = post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
-                .andExpectAll(
-                        MockMvcResultMatchers.status().isCreated(),
-                        MockMvcResultMatchers.header().string("Location", "/categories/123")
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.header().string("Location", "/categories/123"))
+                .andExpect( MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo("123")));
 
-                );
         Mockito.verify(createCategoryUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(expectedName, cmd.name())
                 && Objects.equals(expectedDescription, cmd.description())
