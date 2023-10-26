@@ -1,6 +1,7 @@
 package com.smarcosm.admin_catalogo.infrastructure.api;
 
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
+import com.smarcosm.admin_catalogo.infrastructure.category.models.CategoryApiOutput;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CreateCategoryApiInput;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,7 +22,7 @@ public interface CategoryAPI {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created successfully"),
             @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
-            @ApiResponse(responseCode = "500", description = "An internal error was thrown"),
+            @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
     })
     ResponseEntity<?> createCategory(@RequestBody CreateCategoryApiInput input);
     @GetMapping
@@ -29,7 +30,7 @@ public interface CategoryAPI {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created successfully"),
             @ApiResponse(responseCode = "422", description = "A invalid parameter was received"),
-            @ApiResponse(responseCode = "500", description = "An internal "),
+            @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
     })
     Pagination<?> listCategory(
             @RequestParam(name = "search", required = false, defaultValue = "") final String search,
@@ -38,4 +39,16 @@ public interface CategoryAPI {
             @RequestParam(name = "sort", required = false, defaultValue = "name") final String sort,
             @RequestParam(name = "dir", required = false, defaultValue = "name") final String direction
     );
+    @GetMapping(
+            value = "{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(summary =  "Get a category by it's identifier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Category retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Category was not found"),
+            @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
+    })
+    CategoryApiOutput getById(@PathVariable(name = "id") String id);
 }

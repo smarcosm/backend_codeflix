@@ -158,20 +158,24 @@ public class CategoryAPITest {
         final var expectedId = aCategory.getId().getValue();
 
         //when
-        final var request = get("/categories/{id}", expectedId);
-
+        final var request = get("/categories/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+        when(getCategoryByIdUseCase.execute(any()))
+                .thenReturn(CategoryOutput.from(aCategory));
 
         final var response = this.mvc.perform(request)
                 .andDo(print());
         //then
         response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(expectedId)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", equalTo(expectedName)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", equalTo(expectedDescription)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.is_active", equalTo(expectedIsActive)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.create_at", equalTo(aCategory.getCreatedAt().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.update_at", equalTo(aCategory.getUpdatedAt().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.delete_at", equalTo(aCategory.getDeletedAt().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created_at", equalTo(aCategory.getCreatedAt().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.updated_at", equalTo(aCategory.getUpdatedAt().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deleted_at", equalTo(aCategory.getDeletedAt())))
         ;
 
 
@@ -183,9 +187,14 @@ public class CategoryAPITest {
         // givem
         final var expectedErrorMessage = "Category with ID 123 was not found";
         final var expectedId = CategoryID.from("123").getValue();
-
+        when(getCategoryByIdUseCase.execute(any()))
+                .thenThrow(DomainException.with(
+                        new Error("Category with ID %s was not found".formatted(expectedId))
+                ));
         // when
-        final var request = get("/categories/{id}", expectedId);
+        final var request = get("/categories/{id}", expectedId)
+                .contentType(MediaType.APPLICATION_JSON);
+
 
         final var response = this.mvc.perform(request)
                 .andDo(print());
