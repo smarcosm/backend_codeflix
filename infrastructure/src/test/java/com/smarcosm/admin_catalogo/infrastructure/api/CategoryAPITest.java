@@ -6,38 +6,37 @@ import com.smarcosm.admin_catalogo.application.category.create.CreateCategoryOut
 import com.smarcosm.admin_catalogo.application.category.create.CreateCategoryUseCase;
 import com.smarcosm.admin_catalogo.application.category.retrieve.get.CategoryOutput;
 import com.smarcosm.admin_catalogo.application.category.retrieve.get.GetCategoryByIdUseCase;
+import com.smarcosm.admin_catalogo.application.category.update.UpdateCategoryOutput;
+import com.smarcosm.admin_catalogo.application.category.update.UpdateCategoryUseCase;
 import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.domain.exception.DomainException;
+import com.smarcosm.admin_catalogo.domain.exception.NotFoundException;
 import com.smarcosm.admin_catalogo.domain.validation.Error;
 import com.smarcosm.admin_catalogo.domain.validation.handler.Notification;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CreateCategoryApiInput;
+import com.smarcosm.admin_catalogo.infrastructure.category.models.UpdateCategoryApiInput;
 import io.vavr.API;
-import io.vavr.control.Either;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Objects;
 
 import static io.vavr.API.Left;
+import static io.vavr.API.Right;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.web.servlet.function.ServerResponse.status;
 
 @ControllerTest(controllers = CategoryAPI.class)
 public class CategoryAPITest {
@@ -49,6 +48,8 @@ public class CategoryAPITest {
     private CreateCategoryUseCase createCategoryUseCase;
     @MockBean
     private GetCategoryByIdUseCase getCategoryByIdUseCase;
+    @MockBean
+    private UpdateCategoryUseCase updateCategoryUseCase;
 
     @Test
     public void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId() throws Exception {
@@ -186,10 +187,10 @@ public class CategoryAPITest {
     public void givenAInvalidId_whenCallsGetCategory_shouldReturnNotFound() throws Exception {
         // givem
         final var expectedErrorMessage = "Category with ID 123 was not found";
-        final var expectedId = CategoryID.from("123").getValue();
+        final var expectedId = CategoryID.from("123");
         when(getCategoryByIdUseCase.execute(any()))
-                .thenThrow(DomainException.with(
-                        new Error("Category with ID %s was not found".formatted(expectedId))
+                .thenThrow(NotFoundException.with(
+                        Category.class, expectedId
                 ));
         // when
         final var request = get("/categories/{id}", expectedId)
@@ -204,5 +205,38 @@ public class CategoryAPITest {
 
         ;
     }
+
+    @Test
+    public void givenAValidCommand_whenCallsUpdateCategory_shouldReturnCategoryId() throws Exception {
+        //given
+        final var expectedId = "123";
+        final var expectedName = "Films";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+
+        when(updateCategoryUseCase.execute(any()))
+                .thenReturn(Right(UpdateCategoryOutput.from(expectedId)));
+
+        //when
+        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var request = put("/categories/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(aCommand));
+
+
+        final var response = this.mvc.perform(request)
+                .andDo(print());
+        //then
+        response.andExpect(MockMvcResultMatchers.status().isNoContent())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE));
+
+
+        verify(updateCategoryUseCase, times(1)).execute(argThat(cmd ->
+                Objects.equals(expectedName, cmd.name())
+                        && Objects.equals(expectedDescription, cmd.description())
+                        && Objects.equals(expectedIsActive, cmd.isActive())));
+    }
+
 }
 

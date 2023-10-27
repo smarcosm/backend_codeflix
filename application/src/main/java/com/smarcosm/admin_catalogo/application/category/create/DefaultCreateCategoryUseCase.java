@@ -34,8 +34,6 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
         return notification.hasError() ? Left(notification) : create(aCategory);
     }
 
-
-
     private Either<Notification, CreateCategoryOutput> create(final Category aCategory) {
         return Try(() -> this.categoryGateway.create(aCategory))
                 .toEither()

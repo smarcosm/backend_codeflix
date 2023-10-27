@@ -1,8 +1,10 @@
 package com.smarcosm.admin_catalogo.application.category.retrieve.get;
 
+import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.domain.exception.DomainException;
+import com.smarcosm.admin_catalogo.domain.exception.NotFoundException;
 import com.smarcosm.admin_catalogo.domain.validation.Error;
 
 import java.util.Objects;
@@ -24,9 +26,9 @@ public class DefaultGetCategoryByIdUseCase extends  GetCategoryByIdUseCase{
                 .map(CategoryOutput::from)
                 .orElseThrow(notFound(anCategoryID));
     }
-    private Supplier<DomainException> notFound(final CategoryID anId){
-       return () -> DomainException.with(
-               new Error("Category with ID %s was not found".formatted(anId.getValue()))
+    private Supplier<NotFoundException> notFound(final CategoryID anId){
+       return () -> NotFoundException.with(
+               Category.class, anId
        );
     }
 
