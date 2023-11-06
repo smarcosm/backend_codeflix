@@ -314,23 +314,21 @@ public class CategoryAPITest {
     }
 
     @Test
-    public void givenAValidId_whenCallsDeleteCategory_shouldBeOK() throws Exception {
+    public void givenAValidId_whenCallsDeleteCategory_shouldReturnNocontent() throws Exception {
         //given
         final var expectedId = "123";
 
-        doNothing().when(getCategoryByIdUseCase.execute(any()));
+        doNothing()
+                .when(deleteCategoryUseCase).execute(any());
         //when
-        final var request = get("/categories/{id}", expectedId)
+        final var request = delete("/categories/{id}", expectedId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
         final var response = this.mvc.perform(request)
                 .andDo(print());
         //then
-        response.andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-
-        ;
+        response.andExpect(MockMvcResultMatchers.status().isNoContent());
         verify(deleteCategoryUseCase, times(1)).execute(eq(expectedId));
     }
 
