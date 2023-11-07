@@ -56,6 +56,7 @@ public class ListCategoryUseCaseIT {
         Assertions.assertEquals(expectedPerPage, actualResult.perPage());
         Assertions.assertEquals(expectedTotal, actualResult.total());
     }
+
     @ParameterizedTest
     @CsvSource({
         "fil,0,10,1,1,Filmes",
