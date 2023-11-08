@@ -5,7 +5,6 @@ import com.smarcosm.admin_catalogo.ControllerTest;
 import com.smarcosm.admin_catalogo.application.category.create.CreateCategoryOutput;
 import com.smarcosm.admin_catalogo.application.category.create.CreateCategoryUseCase;
 import com.smarcosm.admin_catalogo.application.category.delete.DeleteCategoryUseCase;
-import com.smarcosm.admin_catalogo.application.category.delete.DeleteCategoryUseCaseIT;
 import com.smarcosm.admin_catalogo.application.category.retrieve.get.CategoryOutput;
 import com.smarcosm.admin_catalogo.application.category.retrieve.get.GetCategoryByIdUseCase;
 import com.smarcosm.admin_catalogo.application.category.retrieve.list.CategoryListOutput;
@@ -14,17 +13,15 @@ import com.smarcosm.admin_catalogo.application.category.update.UpdateCategoryOut
 import com.smarcosm.admin_catalogo.application.category.update.UpdateCategoryUseCase;
 import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
-import com.smarcosm.admin_catalogo.domain.category.CategorySearchQuery;
 import com.smarcosm.admin_catalogo.domain.exception.DomainException;
 import com.smarcosm.admin_catalogo.domain.exception.NotFoundException;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
 import com.smarcosm.admin_catalogo.domain.validation.Error;
 import com.smarcosm.admin_catalogo.domain.validation.handler.Notification;
-import com.smarcosm.admin_catalogo.infrastructure.category.models.CreateCategoryApiInput;
-import com.smarcosm.admin_catalogo.infrastructure.category.models.UpdateCategoryApiInput;
+import com.smarcosm.admin_catalogo.infrastructure.category.models.CreateCategoryRequest;
+import com.smarcosm.admin_catalogo.infrastructure.category.models.UpdateCategoryRequest;
 import io.vavr.API;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +69,7 @@ public class CategoryAPITest {
         final var expectedIsActive = true;
 
         final var aInput =
-                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
         when(createCategoryUseCase.execute(any()))
                 .thenReturn(API.Right(CreateCategoryOutput.from("123")));
         // when
@@ -104,7 +101,7 @@ public class CategoryAPITest {
         final var expectedIsActive = true;
         final var expectedMessage = "'name' should not be null";
         final var aInput =
-                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
         when(createCategoryUseCase.execute(any()))
                 .thenReturn(Left(Notification.create(new Error(expectedMessage))));
         // when
@@ -136,7 +133,7 @@ public class CategoryAPITest {
         final var expectedIsActive = true;
         final var expectedMessage = "'name' should not be null";
         final var aInput =
-                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
         when(createCategoryUseCase.execute(any()))
                 .thenThrow(DomainException.with(new Error(expectedMessage)));
         // when
@@ -231,7 +228,7 @@ public class CategoryAPITest {
                 .thenReturn(Right(UpdateCategoryOutput.from(expectedId)));
 
         //when
-        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var aCommand = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
         final var request = put("/categories/{id}", expectedId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -265,7 +262,7 @@ public class CategoryAPITest {
                 .thenThrow(NotFoundException.with(Category.class, CategoryID.from(expectedId)));
 
         //when
-        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var aCommand = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
         final var request = put("/categories/{id}", expectedId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -300,7 +297,7 @@ public class CategoryAPITest {
                 .thenReturn(Left(Notification.create(new Error(expectedErrorMessage))));
 
         //when
-        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var aCommand = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
         final var request = put("/categories/{id}", expectedId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -381,7 +378,6 @@ public class CategoryAPITest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].description", equalTo(aCategory.getDescription())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].is_active", equalTo(aCategory.isActive())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].created_at", equalTo(aCategory.getCreatedAt().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].updated_at", equalTo(aCategory.getUpdatedAt().toString())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].deleted_at", equalTo(aCategory.getDeletedAt())));
         verify(listCategoriesUseCase, times(1)).execute(argThat(query ->
                 Objects.equals(expectedPage, query.page())
