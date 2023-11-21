@@ -1,6 +1,5 @@
 package com.smarcosm.admin_catalogo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smarcosm.admin_catalogo.infrastructure.configuration.ObjectMapperConfig;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -12,7 +11,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-@ActiveProfiles("test")
+@ActiveProfiles("test-integration")
 @WebMvcTest
 @Import(ObjectMapperConfig.class)
 public @interface ControllerTest {
