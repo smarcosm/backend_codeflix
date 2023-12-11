@@ -39,7 +39,6 @@ public class CategoryListReponseTest {
                 .hasJsonPathValue("$.description", expectedDescription)
                 .hasJsonPathValue("$.is_active", expectedIsActive)
                 .hasJsonPathValue("$.created_at", expectedCreatedAt.toString())
-
                 .hasJsonPathValue("$.deleted_at", expectedDeletedAt.toString());
     }
 

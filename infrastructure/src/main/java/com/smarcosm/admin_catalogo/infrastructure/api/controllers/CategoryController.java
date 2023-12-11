@@ -33,11 +33,12 @@ public class CategoryController implements CategoryAPI {
     private final DeleteCategoryUseCase deleteCategoryUseCase;
     private final ListCategoriesUseCase listCategoriesUseCase;
 
-    public CategoryController(final CreateCategoryUseCase createCategoryUseCase,
-                              final GetCategoryByIdUseCase getCategoryByIdUseCase,
-                              final UpdateCategoryUseCase updateCategoryUseCase,
-                              final DeleteCategoryUseCase deleteCategoryUseCase,
-                              final ListCategoriesUseCase listCategoriesUseCase
+    public CategoryController(
+            final CreateCategoryUseCase createCategoryUseCase,
+            final GetCategoryByIdUseCase getCategoryByIdUseCase,
+            final UpdateCategoryUseCase updateCategoryUseCase,
+            final DeleteCategoryUseCase deleteCategoryUseCase,
+            final ListCategoriesUseCase listCategoriesUseCase
     ) {
         this.createCategoryUseCase = Objects.requireNonNull(createCategoryUseCase);
         this.getCategoryByIdUseCase = Objects.requireNonNull(getCategoryByIdUseCase);
@@ -53,6 +54,7 @@ public class CategoryController implements CategoryAPI {
                 input.description(),
                 input.active() != null ? input.active() : true
         );
+
         final Function<Notification, ResponseEntity<?>> onError = notification ->
                 ResponseEntity.unprocessableEntity().body(notification);
 
@@ -64,13 +66,19 @@ public class CategoryController implements CategoryAPI {
     }
 
     @Override
-    public Pagination<CategoryListReponse> listCategories(String search, int page, int perPage, String sort, String direction) {
+    public Pagination<CategoryListReponse> listCategories(
+            final String search,
+            final int page,
+            final int perPage,
+            final String sort,
+            final String direction
+    ) {
         return listCategoriesUseCase.execute(new CategorySearchQuery(page, perPage, search, sort, direction))
                 .map(CategoryApiPresenter::present);
     }
 
     @Override
-    public CategoryResponse getById(String id) {
+    public CategoryResponse getById(final String id) {
         return CategoryApiPresenter.present(this.getCategoryByIdUseCase.execute(id));
     }
 
@@ -82,10 +90,12 @@ public class CategoryController implements CategoryAPI {
                 input.description(),
                 input.active() != null ? input.active() : true
         );
+
         final Function<Notification, ResponseEntity<?>> onError = notification ->
                 ResponseEntity.unprocessableEntity().body(notification);
 
-        final Function<UpdateCategoryOutput, ResponseEntity<?>> onSuccess = ResponseEntity::ok;
+        final Function<UpdateCategoryOutput, ResponseEntity<?>> onSuccess =
+                ResponseEntity::ok;
 
         return this.updateCategoryUseCase.execute(aCommand)
                 .fold(onError, onSuccess);
