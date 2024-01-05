@@ -94,7 +94,7 @@ public class GenreTest {
         Assertions.assertTrue(actualUpdatedAt.isBefore(actualGenre.getUpdatedAt()));
         Assertions.assertNotNull(actualGenre.getCreatedAt());
         Assertions.assertNotNull(actualGenre.getUpdatedAt());
-        Assertions.assertNull(actualGenre.getDeletedAt());
+        Assertions.assertNotNull(actualGenre.getDeletedAt());
     }
     @Test
     public void givenAnInactiveGenre_whenCallActivate_shouldReceiveOK(){
@@ -118,7 +118,6 @@ public class GenreTest {
         Assertions.assertEquals(expectedCategories, actualGenre.getCategories().size());
         Assertions.assertEquals(actualCreatedAt, actualGenre.getCreatedAt());
         Assertions.assertTrue(actualUpdatedAt.isBefore(actualGenre.getUpdatedAt()));
-        Assertions.assertNotNull(actualGenre.getCreatedAt());
         Assertions.assertNotNull(actualGenre.getUpdatedAt());
         Assertions.assertNull(actualGenre.getDeletedAt());
     }
