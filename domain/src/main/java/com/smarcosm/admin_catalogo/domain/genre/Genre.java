@@ -2,7 +2,9 @@ package com.smarcosm.admin_catalogo.domain.genre;
 
 import com.smarcosm.admin_catalogo.domain.AggregateRoot;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
+import com.smarcosm.admin_catalogo.domain.exception.NotificationException;
 import com.smarcosm.admin_catalogo.domain.validation.ValidationHandler;
+import com.smarcosm.admin_catalogo.domain.validation.handler.Notification;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -32,6 +34,12 @@ public class Genre extends AggregateRoot<GenreID>{
         this.createdAt = aCreatedAt;
         this.updatedAt = aUpdatedAt;
         this.deletedAt = aDeletedAt;
+        final var notification = Notification.create();
+        validate(notification);
+
+        if (notification.hasError()){
+            throw new NotificationException("Failed to create a Aggregate Genre", notification);
+        }
     }
     public static Genre newGenre(final String aName, final boolean isActive){
         final var anId = GenreID.unique();
@@ -41,7 +49,7 @@ public class Genre extends AggregateRoot<GenreID>{
     }
     @Override
     public void validate(final ValidationHandler handler){
-
+        new GenreValidator(this, handler).validate();
     }
     public static Genre with(
             final GenreID anID,
