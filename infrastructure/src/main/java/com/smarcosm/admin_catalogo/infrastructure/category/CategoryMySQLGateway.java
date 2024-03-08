@@ -3,12 +3,11 @@ package com.smarcosm.admin_catalogo.infrastructure.category;
 import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
-import com.smarcosm.admin_catalogo.domain.category.CategorySearchQuery;
+import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
 import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryJpaEntity;
 import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryRepository;
 import com.smarcosm.admin_catalogo.infrastructure.utils.SpecificationUtils;
-import jakarta.persistence.criteria.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -47,7 +46,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
     public Category update(final Category aCategory) { return create(aCategory); }
 
     @Override
-    public Pagination<Category> findAll(CategorySearchQuery aQuery) {
+    public Pagination<Category> findAll(SearchQuery aQuery) {
         // Paginacao
         final var page = PageRequest.of(
                 aQuery.page(),

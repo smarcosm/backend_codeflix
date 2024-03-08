@@ -1,6 +1,6 @@
-package com.smarcosm.admin_catalogo.domain.category;
+package com.smarcosm.admin_catalogo.domain.pagination;
 
-public record CategorySearchQuery(
+public record SearchQuery(
         int page,
         int perPage,
         String terms,

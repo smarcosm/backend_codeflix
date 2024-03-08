@@ -2,7 +2,7 @@ package com.smarcosm.admin_catalogo.application.category.retrieve.list;
 
 import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
-import com.smarcosm.admin_catalogo.domain.category.CategorySearchQuery;
+import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +42,7 @@ public class ListCategoriesUseCaseTest {
         final var expectedDirect = "asc";
 
 
-        final var aQuery = new CategorySearchQuery(expectedPage, expectedPerPage,expectedTerms, expectedSort,expectedDirect);
+        final var aQuery = new SearchQuery(expectedPage, expectedPerPage,expectedTerms, expectedSort,expectedDirect);
 
         final var expectedPagination = new Pagination<>(expectedPage, expectedPerPage, categories.size(), categories);
 
@@ -71,7 +71,7 @@ public class ListCategoriesUseCaseTest {
         final var expectedDirect = "asc";
 
 
-        final var aQuery = new CategorySearchQuery(expectedPage, expectedPerPage,expectedTerms, expectedSort,expectedDirect);
+        final var aQuery = new SearchQuery(expectedPage, expectedPerPage,expectedTerms, expectedSort,expectedDirect);
 
         final var expectedPagination = new Pagination<>(expectedPage, expectedPerPage, categories.size(), categories);
 
@@ -99,7 +99,7 @@ public class ListCategoriesUseCaseTest {
         final var expectedDirect = "asc";
         final var expectedErrorMessage = "Gateway error";
 
-        final var aQuery = new CategorySearchQuery(expectedPage, expectedPerPage,expectedTerms, expectedSort,expectedDirect);
+        final var aQuery = new SearchQuery(expectedPage, expectedPerPage,expectedTerms, expectedSort,expectedDirect);
 
         Mockito.when(categoryGateway.findAll(Mockito.eq(aQuery)))
                 .thenThrow(new IllegalStateException(expectedErrorMessage));

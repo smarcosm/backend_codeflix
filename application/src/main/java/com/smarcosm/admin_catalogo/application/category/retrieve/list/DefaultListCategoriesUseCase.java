@@ -1,7 +1,7 @@
 package com.smarcosm.admin_catalogo.application.category.retrieve.list;
 
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
-import com.smarcosm.admin_catalogo.domain.category.CategorySearchQuery;
+import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
 
 import java.util.Objects;
@@ -14,7 +14,7 @@ public class DefaultListCategoriesUseCase extends ListCategoriesUseCase{
     }
 
     @Override
-    public Pagination<CategoryListOutput> execute(final CategorySearchQuery aQuery) {
+    public Pagination<CategoryListOutput> execute(final SearchQuery aQuery) {
         return this.categoryGateway.findAll(aQuery).map(CategoryListOutput::from);
     }
 }
