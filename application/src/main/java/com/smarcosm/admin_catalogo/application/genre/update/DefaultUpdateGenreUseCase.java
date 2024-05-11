@@ -40,7 +40,7 @@ public class DefaultUpdateGenreUseCase extends UpdateGenreUseCase {
         final var categories = toCategoryID(aCommand.categories());
 
         final var aGenre = this.genreGateway.findById(anId)
-                .orElseThrow(notFaund(anId));
+                .orElseThrow(notFound(anId));
 
         final var notification = Notification.create();
         notification.append(validateCategories(categories));
@@ -76,7 +76,7 @@ public class DefaultUpdateGenreUseCase extends UpdateGenreUseCase {
         return notification;
     }
 
-    private Supplier<DomainException> notFaund(final Identifier anId) {
+    private Supplier<DomainException> notFound(final Identifier anId) {
         return () -> NotFoundException.with(Genre.class, anId);
     }
 
