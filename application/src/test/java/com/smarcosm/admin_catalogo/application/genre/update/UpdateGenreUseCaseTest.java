@@ -1,5 +1,6 @@
 package com.smarcosm.admin_catalogo.application.genre.update;
 
+import com.smarcosm.admin_catalogo.application.UseCaseTest;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.domain.exception.NotificationException;
@@ -7,11 +8,9 @@ import com.smarcosm.admin_catalogo.domain.genre.Genre;
 import com.smarcosm.admin_catalogo.domain.genre.GenreGateway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,8 +21,8 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-public class UpdateGenreUseCaseTest {
+
+public class UpdateGenreUseCaseTest extends UseCaseTest {
     @InjectMocks
     private DefaultUpdateGenreUseCase useCase;
 
@@ -31,6 +30,10 @@ public class UpdateGenreUseCaseTest {
     private CategoryGateway categoryGateway;
     @Mock
     private GenreGateway genreGateway;
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(categoryGateway, genreGateway);
+    }
 
     @Test
     public void givenAValidCommand_whenCallsUpdateGenre_shouldReturnGenreId() {
@@ -251,4 +254,5 @@ public class UpdateGenreUseCaseTest {
     private List<String> asString(final List<CategoryID> categories) {
         return categories.stream().map(CategoryID::getValue).toList();
     }
+
 }

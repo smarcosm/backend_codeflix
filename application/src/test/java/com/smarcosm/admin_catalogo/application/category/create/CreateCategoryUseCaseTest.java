@@ -1,15 +1,14 @@
 package com.smarcosm.admin_catalogo.application.category.create;
 
+import com.smarcosm.admin_catalogo.application.UseCaseTest;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Objects;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
@@ -17,20 +16,20 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-public class CreateCategoryUseCaseTest {
+
+public class CreateCategoryUseCaseTest extends UseCaseTest {
     @InjectMocks
     private DefaultCreateCategoryUseCase useCase;
     @Mock
     private CategoryGateway categoryGateway;
-    @BeforeEach
-    void cleanUp(){
-        Mockito.reset(categoryGateway);
+
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(categoryGateway);
     }
+
     // 1. Teste do caminho feliz
-    // 2. Teste passando um propriedade inválida (name)
-    // 3. Teste criando uma categoria inativa
-    // 4. Teste simulando um erro generico vindo do gateway
+
     @Test
     public void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId() {
         final var expectedName = "Filmes";
@@ -62,6 +61,7 @@ public class CreateCategoryUseCaseTest {
                 ));
     }
 
+    // 2. Teste passando um propriedade inválida (name)
 
     @Test
     public void givenAInvalidName_whenCallsCreateCategory_thenShouldReturnDomainException() {
@@ -83,6 +83,7 @@ public class CreateCategoryUseCaseTest {
         Mockito.verify(categoryGateway, times(0)).create(Mockito.any());
     }
 
+    // 3. Teste criando uma categoria inativa
 
     @Test
     public void givenAValidCommandWithInactiveCategory_whenCallsCreateCategory_shouldReturnInactiveCategoryId() {
@@ -113,6 +114,7 @@ public class CreateCategoryUseCaseTest {
                 ));
     }
 
+    // 4. Teste simulando um erro generico vindo do gateway
 
     @Test
     public void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnException() {

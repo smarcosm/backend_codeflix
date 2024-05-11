@@ -1,38 +1,36 @@
 package com.smarcosm.admin_catalogo.application.category.retrieve.get;
 
+import com.smarcosm.admin_catalogo.application.UseCaseTest;
 import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.domain.exception.DomainException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-public class GetCategoryByIdUseCaseTest {
+
+public class GetCategoryByIdUseCaseTest extends UseCaseTest {
     @InjectMocks
     private DefaultGetCategoryByIdUseCase useCase;
 
     @Mock
     private CategoryGateway categoryGateway;
 
-    @BeforeEach
-    void cleanUp(){
-        Mockito.reset(categoryGateway);
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(categoryGateway);
     }
+
     @Test
-    public void givenAValidId_whenCallsGetCategory_shouldReturnCategory(){
+    public void givenAValidId_whenCallsGetCategory_shouldReturnCategory() {
         final var expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
@@ -55,7 +53,7 @@ public class GetCategoryByIdUseCaseTest {
     }
 
     @Test
-    public void givenAInvalidId_whenCallsGetCategory_shouldReturnNotFound(){
+    public void givenAInvalidId_whenCallsGetCategory_shouldReturnNotFound() {
         final var expectedErrorMessage = "Category with ID 123 was not found";
         final var expectedId = CategoryID.from("123");
 
@@ -66,8 +64,9 @@ public class GetCategoryByIdUseCaseTest {
         Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
 
     }
+
     @Test
-    public void givenAValidId_whenGatewayThrowsException_shouldReturnException(){
+    public void givenAValidId_whenGatewayThrowsException_shouldReturnException() {
         final var expectedErrorMessage = "Gateway error";
         final var expectedId = CategoryID.from("123");
 

@@ -1,35 +1,33 @@
 package com.smarcosm.admin_catalogo.application.category.retrieve.list;
 
+import com.smarcosm.admin_catalogo.application.UseCaseTest;
 import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
-import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
+import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
-public class ListCategoriesUseCaseTest {
+
+public class ListCategoriesUseCaseTest extends UseCaseTest {
     @InjectMocks
     private DefaultListCategoriesUseCase useCase;
 
     @Mock
     private CategoryGateway categoryGateway;
 
-    @BeforeEach
-    void cleanUp(){
-        Mockito.reset(categoryGateway);
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(categoryGateway);
     }
 
     @Test
-    public void givenAValidQuery_whenCallsListCategories_thenShouldReturnCategories(){
+    public void givenAValidQuery_whenCallsListCategories_thenShouldReturnCategories() {
         final var categories = List.of(
                 Category.newCategory("Filmes", null, true),
                 Category.newCategory("Series", null, true)
@@ -42,7 +40,7 @@ public class ListCategoriesUseCaseTest {
         final var expectedDirect = "asc";
 
 
-        final var aQuery = new SearchQuery(expectedPage, expectedPerPage,expectedTerms, expectedSort,expectedDirect);
+        final var aQuery = new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirect);
 
         final var expectedPagination = new Pagination<>(expectedPage, expectedPerPage, categories.size(), categories);
 
@@ -60,8 +58,9 @@ public class ListCategoriesUseCaseTest {
         Assertions.assertEquals(expectedPerPage, actualResult.perPage());
         Assertions.assertEquals(categories.size(), actualResult.total());
     }
+
     @Test
-    public void givenAValidQuery_whenHasNoResults_thenShouldReturnEmptyCategories(){
+    public void givenAValidQuery_whenHasNoResults_thenShouldReturnEmptyCategories() {
         final var categories = List.<Category>of();
 
         final var expectedPage = 0;
@@ -71,7 +70,7 @@ public class ListCategoriesUseCaseTest {
         final var expectedDirect = "asc";
 
 
-        final var aQuery = new SearchQuery(expectedPage, expectedPerPage,expectedTerms, expectedSort,expectedDirect);
+        final var aQuery = new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirect);
 
         final var expectedPagination = new Pagination<>(expectedPage, expectedPerPage, categories.size(), categories);
 
@@ -89,8 +88,9 @@ public class ListCategoriesUseCaseTest {
         Assertions.assertEquals(expectedPerPage, actualResult.perPage());
         Assertions.assertEquals(categories.size(), actualResult.total());
     }
+
     @Test
-    public void givenAValidQuery_whenGatewayThrowsException_thenShouldReturnException(){
+    public void givenAValidQuery_whenGatewayThrowsException_thenShouldReturnException() {
 
         final var expectedPage = 0;
         final var expectedPerPage = 10;
@@ -99,7 +99,7 @@ public class ListCategoriesUseCaseTest {
         final var expectedDirect = "asc";
         final var expectedErrorMessage = "Gateway error";
 
-        final var aQuery = new SearchQuery(expectedPage, expectedPerPage,expectedTerms, expectedSort,expectedDirect);
+        final var aQuery = new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirect);
 
         Mockito.when(categoryGateway.findAll(Mockito.eq(aQuery)))
                 .thenThrow(new IllegalStateException(expectedErrorMessage));
