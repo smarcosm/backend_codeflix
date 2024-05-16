@@ -1,7 +1,6 @@
 package com.smarcosm.admin_catalogo.application.genre.retrieve.list;
 
 import com.smarcosm.admin_catalogo.application.UseCaseTest;
-import com.smarcosm.admin_catalogo.application.genre.retrieve.list.GenreListOutput;
 import com.smarcosm.admin_catalogo.domain.genre.Genre;
 import com.smarcosm.admin_catalogo.domain.genre.GenreGateway;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
@@ -22,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 public class ListGenreUseCaseTest extends UseCaseTest {
     @InjectMocks
-    private DefaultListGenreUseCase useCase;
+    private DefaultListGenresUseCase useCase;
 
     @Mock
     private GenreGateway genreGateway;
@@ -101,7 +100,7 @@ public class ListGenreUseCaseTest extends UseCaseTest {
     }
 
     @Test
-    public void givenAValidQuery_whenGatewayThrowsException_thenShouldReturnException() {
+    public void givenAValidQuery_whenCallsListGenreAndGatewayThrowsRandomError_ShouldReturnException() {
 
         final var expectedPage = 0;
         final var expectedPerPage = 10;
