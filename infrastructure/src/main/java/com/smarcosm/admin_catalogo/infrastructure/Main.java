@@ -16,7 +16,7 @@ public class Main {
 //    ApplicationRunner runner(
 //            @Autowired CreateCategoryUseCase createCategoryUseCase,
 //            @Autowired UpdateCategoryUseCase updateCategoryUseCase,
-//            @Autowired GetCategoryByIdUseCase getCategoryByIdUseCase,
+//            @Autowired GetGenreByIdUseCase getCategoryByIdUseCase,
 //            @Autowired ListCategoriesUseCase listCategoriesUseCase,
 //            @Autowired DeleteCategoryUseCase deleteCategoryUseCase
 //            ) {

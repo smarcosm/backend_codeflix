@@ -2,7 +2,6 @@ package com.smarcosm.admin_catalogo.application.genre.retrieve.get;
 
 import com.smarcosm.admin_catalogo.application.UseCaseTest;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
-import com.smarcosm.admin_catalogo.domain.exception.DomainException;
 import com.smarcosm.admin_catalogo.domain.exception.NotFoundException;
 import com.smarcosm.admin_catalogo.domain.genre.Genre;
 import com.smarcosm.admin_catalogo.domain.genre.GenreGateway;

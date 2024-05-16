@@ -6,7 +6,7 @@ import com.smarcosm.admin_catalogo.infrastructure.category.models.CategoryRespon
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CategoryListReponse;
 
 public interface CategoryApiPresenter {
-//    Function<CategoryOutput, CategoryResponse> present =
+//    Function<GenreOutput, CategoryResponse> present =
 //            output -> new CategoryResponse(
 //                    output.id().getValue(),
 //                    output.name(),
