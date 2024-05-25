@@ -6,16 +6,17 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 import java.lang.annotation.*;
-
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @ActiveProfiles("test-integration")
-@ComponentScan(includeFilters = {
-        @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".[MySQLGateway]")
-})
+@ComponentScan(
+        basePackages = "com.smarcosm.admin_catalogo",
+        includeFilters = {
+                @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".[MySQLGateway]")
+        }
+)
 @DataJpaTest
 @ExtendWith(MySQLCleanUpExtension.class)
 public @interface MySQLGatewayTest {
-
 }

@@ -30,6 +30,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":application"))
 
+
     implementation('mysql:mysql-connector-java:8.0.33')
     implementation 'io.vavr:vavr:0.10.4'
 
