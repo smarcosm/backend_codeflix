@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -63,7 +64,7 @@ public class GenreJpaEntity {
                 GenreID.from(getId()),
                 getName(),
                 isActive(),
-                getCategories().stream().map(it -> CategoryID.from(it.getId().getCategoryId())).toList(),
+                getCategoryIDs(),
                 getCreatedAt(),
                 getUpdatedAt(),
                 getDeletedAt()
@@ -98,6 +99,20 @@ public class GenreJpaEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    // Declaração de um método público chamado 'getCategoryIDs'
+    public List<CategoryID> getCategoryIDs(){
+        // Este método não recebe nenhum argumento
+
+        // 'getCategories()' é chamado para obter um conjunto de objetos 'GenreCategoryJpaEntity'
+        return getCategories().stream()
+                // 'map()' é uma operação intermediária que transforma os elementos do fluxo
+                // Aqui, cada objeto 'GenreCategoryJpaEntity' é transformado em um objeto 'CategoryID'
+                .map(it -> CategoryID.from(it.getId().getCategoryId()))
+                // 'toList()' é uma operação terminal que coleta os elementos do fluxo transformado em uma lista
+                .toList();
+        // O resultado é uma lista de objetos 'CategoryID'
     }
 
     public Set<GenreCategoryJpaEntity> getCategories() {
