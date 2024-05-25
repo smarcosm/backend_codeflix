@@ -77,11 +77,11 @@ public class GenreMySQLGatewayTest {
 
         final var expectedId = aGenre.getId();
 
-        Assertions.assertEquals(1, genreRepository.count());
+        Assertions.assertEquals(0, genreRepository.count());
 
         final var actualGenre = genreGateway.create(aGenre);
 
-        Assertions.assertEquals(0, genreRepository.count());
+        Assertions.assertEquals(1, genreRepository.count());
 
         Assertions.assertEquals(expectedId, actualGenre.getId());
         Assertions.assertEquals(expectedName, actualGenre.getName());
