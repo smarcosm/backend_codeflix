@@ -7,7 +7,6 @@ import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
 import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
 import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryJpaEntity;
 import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryRepository;
-import com.smarcosm.admin_catalogo.infrastructure.utils.SpecificationUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -58,11 +57,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
         // Busca dinamica pelo criterio terms (name ou description)
         final var specifications = Optional.ofNullable(aQuery.terms())
                 .filter(str -> !str.isBlank())
-                .map(str -> 
-                    SpecificationUtils
-                            .<CategoryJpaEntity>like("name", str)
-                            .or(like("description", str))
-                )
+                .map(this::assembleSpecification)
                 .orElse(null);
 
        final var pageResult = this.repository.findAll(Specification.where(specifications), page);
@@ -82,5 +77,10 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     private Category save(final Category aCategory){
         return this.repository.save(CategoryJpaEntity.from(aCategory)).toAggregate();
+    }
+    private Specification<CategoryJpaEntity> assembleSpecification(final String str) {
+        final Specification<CategoryJpaEntity> nameLike = like("name", str);
+        final Specification<CategoryJpaEntity> descriptionLike = like("description", str);
+        return nameLike.or(descriptionLike);
     }
 }

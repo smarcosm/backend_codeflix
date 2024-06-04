@@ -7,6 +7,10 @@ import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
 import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
 import com.smarcosm.admin_catalogo.infrastructure.genre.persistence.GenreJpaEntity;
 import com.smarcosm.admin_catalogo.infrastructure.genre.persistence.GenreRepository;
+import com.smarcosm.admin_catalogo.infrastructure.utils.SpecificationUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -46,8 +50,31 @@ public class GenreMySQLGateway implements GenreGateway {
 
     @Override
     public Pagination<Genre> findAll(final SearchQuery aQuery) {
-        return null;
+        final var page = PageRequest.of(
+                aQuery.page(),
+                aQuery.perPage(),
+                Sort.by(Sort.Direction.fromString(aQuery.direction()), aQuery.sort())
+        );
+
+        final var where = Optional.ofNullable(aQuery.terms())
+                .filter(str -> !str.isBlank())
+                .map(this::assembleSpecification)
+                .orElse(null);
+
+        final var pageResult =
+                this.genreRepository.findAll(Specification.where(where), page);
+
+        return new Pagination<>(
+                pageResult.getNumber(),
+                pageResult.getSize(),
+                pageResult.getTotalElements(),
+                pageResult.map(GenreJpaEntity::toAggregate).toList()
+        );
     }
+    private Specification<GenreJpaEntity> assembleSpecification(final String terms){
+        return SpecificationUtils.like("name", terms);
+    }
+
     public Genre save(final Genre aGenre){
         // 'this.genreRepository.save()' é chamado para salvar o objeto 'aGenre' no repositório
         // 'GenreJpaEntity.from(aGenre)' converte o objeto 'aGenre' em um objeto 'GenreJpaEntity'
