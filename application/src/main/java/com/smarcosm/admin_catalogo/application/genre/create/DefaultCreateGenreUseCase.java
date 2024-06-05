@@ -38,11 +38,12 @@ public class DefaultCreateGenreUseCase extends CreateGenreUseCase {
 
         final var aGenre = notification.validate(() -> Genre.newGenre(aName, isActive));
 
-        if (notification.hasError()) {
+        if (!notification.hasError()) {
+            aGenre.addCategories(categories);
+            return CreateGenreOutput.from(this.genreGateway.create(aGenre));
+        } else {
             throw new NotificationException("Could not create Aggregate Genre", notification);
         }
-        aGenre.addCategories(categories);
-        return CreateGenreOutput.from(this.genreGateway.create(aGenre));
     }
 
     private ValidationHandler validateCategories(final List<CategoryID> ids) {
