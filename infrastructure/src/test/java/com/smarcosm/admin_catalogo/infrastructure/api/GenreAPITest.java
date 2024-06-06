@@ -65,7 +65,7 @@ public class GenreAPITest {
                 .andDo(print());
         // then
         aResponse.andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.header().string("Location", "/genre" + expectedId))
+                .andExpect(MockMvcResultMatchers.header().string("Location", "/genres/" + expectedId))
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo("123")));
 
@@ -95,7 +95,7 @@ public class GenreAPITest {
         final var aResponse = this.mvc.perform(aRequest)
                 .andDo(print());
         // then
-        aResponse.andExpect(MockMvcResultMatchers.status().isCreated())
+        aResponse.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
                 .andExpect(MockMvcResultMatchers.header().string("Location", nullValue()))
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors", hasSize(1)))
