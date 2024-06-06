@@ -134,7 +134,7 @@ public class GenreAPITest {
         // when
         final var aRequest = get("/genres/{id}", expectedId)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(MediaType.APPLICATION_JSON_VALUE);
+                .contentType(MediaType.APPLICATION_JSON);
         final var response = this.mvc.perform(aRequest);
         // then
         response.andExpect(MockMvcResultMatchers.status().isOk())
@@ -161,9 +161,9 @@ public class GenreAPITest {
                 .thenThrow(NotFoundException.with(Genre.class, expectedId));
 
         // when
-        final var aRequest = get("/genres/{id}", expectedId)
+        final var aRequest = get("/genres/{id}", expectedId.getValue())
                 .accept(MediaType.APPLICATION_JSON)
-                .content(MediaType.APPLICATION_JSON_VALUE);
+                .contentType(MediaType.APPLICATION_JSON);
         final var response = this.mvc.perform(aRequest);
         // then
         response.andExpect(MockMvcResultMatchers.status().isNotFound())

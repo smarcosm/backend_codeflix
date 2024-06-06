@@ -2,12 +2,14 @@ package com.smarcosm.admin_catalogo.infrastructure.api.controllers;
 
 import com.smarcosm.admin_catalogo.application.genre.create.CreateGenreCommand;
 import com.smarcosm.admin_catalogo.application.genre.create.CreateGenreUseCase;
+import com.smarcosm.admin_catalogo.application.genre.retrieve.get.GetGenreByIdUseCase;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
 import com.smarcosm.admin_catalogo.infrastructure.api.GenreAPI;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.CreateGenreRequest;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreListReponse;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreResponse;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.UpdateGenreRequest;
+import com.smarcosm.admin_catalogo.infrastructure.genre.presenters.GenreApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,9 +17,10 @@ import java.net.URI;
 @RestController
 public class GenreController implements GenreAPI {
     private final CreateGenreUseCase createGenreUseCase;
-
-    public GenreController(final CreateGenreUseCase createGenreUseCase) {
+    private final GetGenreByIdUseCase getGenreByIdUseCase;
+    public GenreController(final CreateGenreUseCase createGenreUseCase, final GetGenreByIdUseCase getGenreByIdUseCase) {
         this.createGenreUseCase = createGenreUseCase;
+        this.getGenreByIdUseCase = getGenreByIdUseCase;
     }
 
     @Override
@@ -46,7 +49,8 @@ public class GenreController implements GenreAPI {
 
     @Override
     public GenreResponse getById(final String id) {
-        return null;
+
+        return GenreApiPresenter.present(this.getGenreByIdUseCase.execute(id));
     }
 
     @Override
