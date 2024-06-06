@@ -9,7 +9,7 @@ import org.springframework.boot.test.json.JacksonTester;
 import java.time.Instant;
 
 @JacksonTest
-public class CategoryListReponseTest {
+public class GenreListReponseTest {
     @Autowired
     private JacksonTester<CategoryListReponse> json;
 

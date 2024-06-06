@@ -9,17 +9,15 @@ import org.springframework.boot.test.json.JacksonTester;
 import java.time.Instant;
 
 @JacksonTest
-public class UpdateCategoryRequestTest {
+public class CreateGenreRequestTest {
     @Autowired
-    private JacksonTester<UpdateCategoryRequest> json;
-
+    private JacksonTester<CreateCategoryRequest> json;
     @Test
     public void testUnMarshall() throws Exception {
 
         final var expectedName = "Films";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
-
 
         final var json = """
                 {
@@ -44,4 +42,26 @@ public class UpdateCategoryRequestTest {
                 .hasFieldOrPropertyWithValue("active", expectedIsActive)
         ;
     }
+    @Test
+    public void testMarshall() throws Exception {
+        final var expectedName = "Films";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+
+
+        final var request = new CreateCategoryRequest(
+                expectedName,
+                expectedDescription,
+                expectedIsActive
+
+        );
+        final var actualJson = this.json.write(request);
+
+        Assertions.assertThat(actualJson)
+                .hasJsonPathValue("$.name", expectedName)
+                .hasJsonPathValue("$.description", expectedDescription)
+                .hasJsonPathValue("$.is_active", expectedIsActive)
+                ;
+    }
+
 }
