@@ -2,6 +2,7 @@ package com.smarcosm.admin_catalogo.infrastructure.api.controllers;
 
 import com.smarcosm.admin_catalogo.application.genre.create.CreateGenreCommand;
 import com.smarcosm.admin_catalogo.application.genre.create.CreateGenreUseCase;
+import com.smarcosm.admin_catalogo.application.genre.delete.DeleteGenreUseCase;
 import com.smarcosm.admin_catalogo.application.genre.retrieve.get.GetGenreByIdUseCase;
 import com.smarcosm.admin_catalogo.application.genre.update.UpdateGenreCommand;
 import com.smarcosm.admin_catalogo.application.genre.update.UpdateGenreUseCase;
@@ -20,15 +21,18 @@ import java.net.URI;
 public class GenreController implements GenreAPI {
     private final CreateGenreUseCase createGenreUseCase;
     private final GetGenreByIdUseCase getGenreByIdUseCase;
+    private final DeleteGenreUseCase deleteGenreUseCase;
     private final UpdateGenreUseCase updateGenreUseCase;
+
     public GenreController(
             final CreateGenreUseCase createGenreUseCase,
             final GetGenreByIdUseCase getGenreByIdUseCase,
-            final UpdateGenreUseCase updateGenreUseCase
-    ) {
+            final UpdateGenreUseCase updateGenreUseCase,
+            final DeleteGenreUseCase deleteGenreUseCase) {
         this.createGenreUseCase = createGenreUseCase;
         this.getGenreByIdUseCase = getGenreByIdUseCase;
         this.updateGenreUseCase = updateGenreUseCase;
+        this.deleteGenreUseCase = deleteGenreUseCase;
     }
 
     @Override
@@ -77,6 +81,6 @@ public class GenreController implements GenreAPI {
 
     @Override
     public void deleteById(final String id) {
-
+        this.deleteGenreUseCase.execute(id);
     }
 }
