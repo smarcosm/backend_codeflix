@@ -4,9 +4,11 @@ import com.smarcosm.admin_catalogo.application.genre.create.CreateGenreCommand;
 import com.smarcosm.admin_catalogo.application.genre.create.CreateGenreUseCase;
 import com.smarcosm.admin_catalogo.application.genre.delete.DeleteGenreUseCase;
 import com.smarcosm.admin_catalogo.application.genre.retrieve.get.GetGenreByIdUseCase;
+import com.smarcosm.admin_catalogo.application.genre.retrieve.list.ListGenreUseCase;
 import com.smarcosm.admin_catalogo.application.genre.update.UpdateGenreCommand;
 import com.smarcosm.admin_catalogo.application.genre.update.UpdateGenreUseCase;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
+import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
 import com.smarcosm.admin_catalogo.infrastructure.api.GenreAPI;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.CreateGenreRequest;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreListReponse;
@@ -23,16 +25,19 @@ public class GenreController implements GenreAPI {
     private final GetGenreByIdUseCase getGenreByIdUseCase;
     private final DeleteGenreUseCase deleteGenreUseCase;
     private final UpdateGenreUseCase updateGenreUseCase;
+    private final ListGenreUseCase listGenreUseCase;
 
     public GenreController(
             final CreateGenreUseCase createGenreUseCase,
             final GetGenreByIdUseCase getGenreByIdUseCase,
             final UpdateGenreUseCase updateGenreUseCase,
-            final DeleteGenreUseCase deleteGenreUseCase) {
+            final DeleteGenreUseCase deleteGenreUseCase,
+            final ListGenreUseCase listGenreUseCase) {
         this.createGenreUseCase = createGenreUseCase;
         this.getGenreByIdUseCase = getGenreByIdUseCase;
         this.updateGenreUseCase = updateGenreUseCase;
         this.deleteGenreUseCase = deleteGenreUseCase;
+        this.listGenreUseCase = listGenreUseCase;
     }
 
     @Override
@@ -56,7 +61,8 @@ public class GenreController implements GenreAPI {
             final String sort,
             final String direction
     ) {
-        return null;
+        return listGenreUseCase.execute(new SearchQuery(page, perPage, search,sort, direction))
+                .map(GenreApiPresenter::present);
     }
 
     @Override
