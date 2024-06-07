@@ -6,10 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
 
-import java.time.Instant;
-
 @JacksonTest
-public class UpdateGenreRequestTest {
+public class UpdateCategoryRequestTest {
     @Autowired
     private JacksonTester<UpdateCategoryRequest> json;
 
