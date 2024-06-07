@@ -2,7 +2,7 @@ package com.smarcosm.admin_catalogo.infrastructure.api;
 
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.CreateGenreRequest;
-import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreListReponse;
+import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreListResponse;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreResponse;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.UpdateGenreRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +38,7 @@ public interface GenreAPI {
             @ApiResponse(responseCode = "422", description = "A invalid parameter was received"),
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
     })
-    Pagination<GenreListReponse> list(
+    Pagination<GenreListResponse> list(
             @RequestParam(name = "search", required = false, defaultValue = "") final String search,
             @RequestParam(name = "page", required = false, defaultValue = "0") final int page,
             @RequestParam(name = "perPage", required = false, defaultValue = "10") final int perPage,

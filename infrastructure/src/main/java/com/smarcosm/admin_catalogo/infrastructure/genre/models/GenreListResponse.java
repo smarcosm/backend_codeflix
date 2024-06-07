@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.Instant;
 
-public record GenreListReponse(
+public record GenreListResponse(
         @JsonProperty("id") String id,
         @JsonProperty("name") String name,
         @JsonProperty("is_active") Boolean active,

@@ -11,7 +11,7 @@ import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
 import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
 import com.smarcosm.admin_catalogo.infrastructure.api.GenreAPI;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.CreateGenreRequest;
-import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreListReponse;
+import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreListResponse;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreResponse;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.UpdateGenreRequest;
 import com.smarcosm.admin_catalogo.infrastructure.genre.presenters.GenreApiPresenter;
@@ -54,7 +54,7 @@ public class GenreController implements GenreAPI {
     }
 
     @Override
-    public Pagination<GenreListReponse> list(
+    public Pagination<GenreListResponse> list(
             final String search,
             final int page,
             final int perPage,

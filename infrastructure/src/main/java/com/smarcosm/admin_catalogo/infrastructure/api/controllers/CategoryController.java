@@ -13,7 +13,7 @@ import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
 import com.smarcosm.admin_catalogo.domain.validation.handler.Notification;
 import com.smarcosm.admin_catalogo.infrastructure.api.CategoryAPI;
-import com.smarcosm.admin_catalogo.infrastructure.category.models.CategoryListReponse;
+import com.smarcosm.admin_catalogo.infrastructure.category.models.CategoryListResponse;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CategoryResponse;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CreateCategoryRequest;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.UpdateCategoryRequest;
@@ -66,7 +66,7 @@ public class CategoryController implements CategoryAPI {
     }
 
     @Override
-    public Pagination<CategoryListReponse> listCategories(
+    public Pagination<CategoryListResponse> listCategories(
             final String search,
             final int page,
             final int perPage,

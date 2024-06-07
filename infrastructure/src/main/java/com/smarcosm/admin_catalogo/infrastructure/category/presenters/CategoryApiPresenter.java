@@ -3,7 +3,7 @@ package com.smarcosm.admin_catalogo.infrastructure.category.presenters;
 import com.smarcosm.admin_catalogo.application.category.retrieve.get.CategoryOutput;
 import com.smarcosm.admin_catalogo.application.category.retrieve.list.CategoryListOutput;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CategoryResponse;
-import com.smarcosm.admin_catalogo.infrastructure.category.models.CategoryListReponse;
+import com.smarcosm.admin_catalogo.infrastructure.category.models.CategoryListResponse;
 
 public interface CategoryApiPresenter {
 //    Function<GenreOutput, GenreResponse> present =
@@ -27,8 +27,8 @@ public interface CategoryApiPresenter {
                 output.deleteAt()
         );
     }
-    static CategoryListReponse present(final CategoryListOutput output){
-        return new CategoryListReponse(
+    static CategoryListResponse present(final CategoryListOutput output){
+        return new CategoryListResponse(
                 output.id().getValue(),
                 output.name(),
                 output.description(),

@@ -2,7 +2,7 @@ package com.smarcosm.admin_catalogo.infrastructure.genre.presenters;
 
 import com.smarcosm.admin_catalogo.application.genre.retrieve.get.GenreOutput;
 import com.smarcosm.admin_catalogo.application.genre.retrieve.list.GenreListOutput;
-import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreListReponse;
+import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreListResponse;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreResponse;
 
 public interface GenreApiPresenter {
@@ -27,8 +27,8 @@ public interface GenreApiPresenter {
                 output.deleteAt()
         );
     }
-    static GenreListReponse present(final GenreListOutput output){
-        return new GenreListReponse(
+    static GenreListResponse present(final GenreListOutput output){
+        return new GenreListResponse(
                 output.id(),
                 output.name(),
                 output.isActive(),
