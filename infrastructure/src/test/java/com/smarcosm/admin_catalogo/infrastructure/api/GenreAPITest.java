@@ -33,9 +33,10 @@ import java.util.Objects;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ControllerTest(controllers = GenreAPI.class)
 public class GenreAPITest {
@@ -71,7 +72,7 @@ public class GenreAPITest {
         final var aResponse = this.mvc.perform(aRequest)
                 .andDo(print());
         // then
-        aResponse.andExpect(MockMvcResultMatchers.status().isCreated())
+        aResponse.andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.header().string("Location", "/genres/" + expectedId))
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo("123")));
@@ -102,7 +103,7 @@ public class GenreAPITest {
         final var aResponse = this.mvc.perform(aRequest)
                 .andDo(print());
         // then
-        aResponse.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+        aResponse.andExpect(status().isUnprocessableEntity())
                 .andExpect(MockMvcResultMatchers.header().string("Location", nullValue()))
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors", hasSize(1)))
@@ -139,7 +140,7 @@ public class GenreAPITest {
                 .contentType(MediaType.APPLICATION_JSON);
         final var response = this.mvc.perform(aRequest);
         // then
-        response.andExpect(MockMvcResultMatchers.status().isOk())
+        response.andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(expectedId)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", equalTo(expectedName)))
@@ -168,7 +169,7 @@ public class GenreAPITest {
                 .contentType(MediaType.APPLICATION_JSON);
         final var response = this.mvc.perform(aRequest);
         // then
-        response.andExpect(MockMvcResultMatchers.status().isNotFound())
+        response.andExpect(status().isNotFound())
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
 
@@ -196,7 +197,7 @@ public class GenreAPITest {
         final var aResponse = this.mvc.perform(aRequest)
                 .andDo(print());
         // then
-        aResponse.andExpect(MockMvcResultMatchers.status().isOk())
+        aResponse.andExpect(status().isOk())
                  .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(expectedId)));
 
@@ -230,7 +231,7 @@ public class GenreAPITest {
         final var aResponse = this.mvc.perform(aRequest)
                 .andDo(print());
         // then
-        aResponse.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+        aResponse.andExpect(status().isUnprocessableEntity())
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
@@ -242,7 +243,20 @@ public class GenreAPITest {
 
         ));
     }
+    @Test
+    public void givenAValidId_whenCallsDeleteGenre_shouldReturnBeOk() throws Exception{
+        // given
+        final var expectedId = "123";
+        doNothing().when(deleteGenreUseCase).execute(any());
+        // when
+        final var aRequest = delete("/genres/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON);
+        final var result = this.mvc.perform(aRequest);
+        // then
+        result.andExpect(status().isNoContent());
 
+        verify(deleteGenreUseCase).execute(eq(expectedId));
+    }
 
 }
 
