@@ -3,6 +3,8 @@ package com.smarcosm.admin_catalogo.infrastructure.api.controllers;
 import com.smarcosm.admin_catalogo.application.genre.create.CreateGenreCommand;
 import com.smarcosm.admin_catalogo.application.genre.create.CreateGenreUseCase;
 import com.smarcosm.admin_catalogo.application.genre.retrieve.get.GetGenreByIdUseCase;
+import com.smarcosm.admin_catalogo.application.genre.update.UpdateGenreCommand;
+import com.smarcosm.admin_catalogo.application.genre.update.UpdateGenreUseCase;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
 import com.smarcosm.admin_catalogo.infrastructure.api.GenreAPI;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.CreateGenreRequest;
@@ -18,9 +20,15 @@ import java.net.URI;
 public class GenreController implements GenreAPI {
     private final CreateGenreUseCase createGenreUseCase;
     private final GetGenreByIdUseCase getGenreByIdUseCase;
-    public GenreController(final CreateGenreUseCase createGenreUseCase, final GetGenreByIdUseCase getGenreByIdUseCase) {
+    private final UpdateGenreUseCase updateGenreUseCase;
+    public GenreController(
+            final CreateGenreUseCase createGenreUseCase,
+            final GetGenreByIdUseCase getGenreByIdUseCase,
+            final UpdateGenreUseCase updateGenreUseCase
+    ) {
         this.createGenreUseCase = createGenreUseCase;
         this.getGenreByIdUseCase = getGenreByIdUseCase;
+        this.updateGenreUseCase = updateGenreUseCase;
     }
 
     @Override
@@ -55,7 +63,16 @@ public class GenreController implements GenreAPI {
 
     @Override
     public ResponseEntity<?> updateById(String id, UpdateGenreRequest input) {
-        return null;
+        final var aCommand = UpdateGenreCommand.with(
+                id,
+                input.name(),
+                input.isActive(),
+                input.categories()
+
+        );
+
+        final var output = this.updateGenreUseCase.execute(aCommand);
+        return ResponseEntity.ok(output);
     }
 
     @Override

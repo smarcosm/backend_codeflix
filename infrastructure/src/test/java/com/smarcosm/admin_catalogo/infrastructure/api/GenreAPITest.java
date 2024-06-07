@@ -214,7 +214,7 @@ public class GenreAPITest {
         final var expectedCategories = List.of("123", "456");
         final var expectedIsActive = true;
         final var expectedErrorMessage = "'name' should be not null";
-        final var aGenre = Genre.newGenre(expectedName, expectedIsActive);
+        final var aGenre = Genre.newGenre("Ação", expectedIsActive);
         final var expectedId = aGenre.getId().getValue();
 
         final var aInput =
