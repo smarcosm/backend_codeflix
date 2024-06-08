@@ -1,9 +1,8 @@
 package com.smarcosm.admin_catalogo.e2e.category;
 
 import com.smarcosm.admin_catalogo.E2ETest;
-import com.smarcosm.admin_catalogo.domain.category.CategoryID;
+import com.smarcosm.admin_catalogo.e2e.MockDsl;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CategoryResponse;
-import com.smarcosm.admin_catalogo.infrastructure.category.models.CreateCategoryRequest;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.UpdateCategoryRequest;
 import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryRepository;
 import com.smarcosm.admin_catalogo.infrastructure.configuration.json.Json;
@@ -28,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @E2ETest
 @Testcontainers
 
-public class CategoryE2ETest {
+public class CategoryE2ETest implements MockDsl {
 
     @Autowired
     private MockMvc mvc;
@@ -46,7 +45,10 @@ public class CategoryE2ETest {
     public static void setDatasourceProperties(final DynamicPropertyRegistry registry) {
         registry.add("mysql.port", () -> MYSQL_CONTAINER.getMappedPort(3306));
     }
-
+    @Override
+    public MockMvc mvc() {
+        return this.mvc;
+    }
     @Test
     public void asACatalogAdminIShouldBeAbleToCreateANewCategoryWithValidValues() throws Exception {
         Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
@@ -314,21 +316,8 @@ public class CategoryE2ETest {
         return this.mvc.perform(aRequest);
     }
 
-    private CategoryID givenACategory(final String aName, final String aDescription, final boolean isActive) throws Exception {
-        final var aRequestBody = new CreateCategoryRequest(aName, aDescription, isActive);
 
-        final var aRequest = post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(Json.writeValueAsString(aRequestBody));
 
-        final var actualId = this.mvc.perform(aRequest)
-                .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse().getHeader("Location")
-                .replace("/categories/", "");
-
-        return CategoryID.from(actualId);
-    }
 
     private CategoryResponse retrieveACategory(final String anId) throws Exception {
 
