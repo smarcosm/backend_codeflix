@@ -8,6 +8,7 @@ import com.smarcosm.admin_catalogo.infrastructure.category.models.CreateCategory
 import com.smarcosm.admin_catalogo.infrastructure.category.models.UpdateCategoryRequest;
 import com.smarcosm.admin_catalogo.infrastructure.configuration.json.Json;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.CreateGenreRequest;
+import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -17,7 +18,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.List;
 import java.util.function.Function;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public interface MockDsl {
@@ -73,8 +75,10 @@ public interface MockDsl {
     default ResultActions listGenres(final int page, final int perPage, final String search, final String sort, final String direction) throws Exception {
         return this.list("/genres", page, perPage, search, sort, direction);
     }
+    default GenreResponse retrieveAGenre(final Identifier anId) throws Exception {
+        return this.retrieve("/genres/", anId, GenreResponse.class);
 
-
+    }
     default <A, D> List<D> mapTo(final List<A> actual, final Function<A, D> mapper) {
         return actual.stream().map(mapper).toList();
     }
@@ -97,7 +101,7 @@ public interface MockDsl {
 
     private <T> T retrieve(final String url, final Identifier anId, final Class<T> clazz) throws Exception {
 
-        final var aRequest = get(url + anId.getValue()).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON);
+        final var aRequest = get(url + anId.getValue()).accept(MediaType.APPLICATION_JSON_UTF8).contentType(MediaType.APPLICATION_JSON_UTF8);
 
         final var json = this.mvc().perform(aRequest).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
