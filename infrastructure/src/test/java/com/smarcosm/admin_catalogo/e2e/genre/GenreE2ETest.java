@@ -2,6 +2,7 @@ package com.smarcosm.admin_catalogo.e2e.genre;
 
 import com.smarcosm.admin_catalogo.E2ETest;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
+import com.smarcosm.admin_catalogo.domain.genre.GenreID;
 import com.smarcosm.admin_catalogo.e2e.MockDsl;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.UpdateGenreRequest;
 import com.smarcosm.admin_catalogo.infrastructure.genre.persistence.GenreRepository;
@@ -293,6 +294,29 @@ public class GenreE2ETest implements MockDsl {
         Assertions.assertNotNull(actualGenre.getCreatedAt());
         Assertions.assertNotNull(actualGenre.getUpdatedAt());
         Assertions.assertNull(actualGenre.getDeletedAt());
+    }
+    @Test
+    public void asACatalogAdminIShouldBeAbleToDeleteAGenreByItsIdentifier() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, genreRepository.count());
+
+        final var filmes = givenACategory("Filmes", null, true);
+        final var actualId = givenAGenre("Ação", true, List.of(filmes));
+
+        deleteAGenre(actualId)
+                .andExpect(status().isNoContent());
+        Assertions.assertFalse(this.genreRepository.existsById(actualId.getValue()));
+        Assertions.assertEquals(0, genreRepository.count());
+    }
+    @Test
+    public void asACatalogAdminIShouldNotSeeAnErrorByDeletingANotExistentGenre() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, genreRepository.count());
+
+        deleteAGenre(GenreID.from("123456"))
+                .andExpect(status().isNoContent());
+
+        Assertions.assertEquals(0, genreRepository.count());
     }
 
 }

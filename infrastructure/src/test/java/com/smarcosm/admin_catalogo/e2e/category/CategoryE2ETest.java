@@ -1,6 +1,7 @@
 package com.smarcosm.admin_catalogo.e2e.category;
 
 import com.smarcosm.admin_catalogo.E2ETest;
+import com.smarcosm.admin_catalogo.domain.genre.GenreID;
 import com.smarcosm.admin_catalogo.e2e.MockDsl;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.UpdateCategoryRequest;
 import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryRepository;
@@ -272,6 +273,16 @@ public class CategoryE2ETest implements MockDsl {
         deleteACategory(actualId)
                 .andExpect(status().isNoContent());
         Assertions.assertFalse(this.categoryRepository.existsById(actualId.getValue()));
+    }
+    @Test
+    public void asACatalogAdminIShouldNotSeeAnErrorByDeletingANotExistentCategory() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        deleteACategory(GenreID.from("123456"))
+                .andExpect(status().isNoContent());
+
+        Assertions.assertEquals(0, categoryRepository.count());
     }
 
 }
