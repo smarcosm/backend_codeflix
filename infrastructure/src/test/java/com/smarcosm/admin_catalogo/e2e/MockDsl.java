@@ -9,6 +9,7 @@ import com.smarcosm.admin_catalogo.infrastructure.category.models.UpdateCategory
 import com.smarcosm.admin_catalogo.infrastructure.configuration.json.Json;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.CreateGenreRequest;
 import com.smarcosm.admin_catalogo.infrastructure.genre.models.GenreResponse;
+import com.smarcosm.admin_catalogo.infrastructure.genre.models.UpdateGenreRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -77,6 +78,10 @@ public interface MockDsl {
     }
     default GenreResponse retrieveAGenre(final Identifier anId) throws Exception {
         return this.retrieve("/genres/", anId, GenreResponse.class);
+
+    }
+    default ResultActions updateAGenre(final Identifier anId, UpdateGenreRequest aRequest) throws Exception {
+        return this.update("/genres/", anId, aRequest);
 
     }
     default <A, D> List<D> mapTo(final List<A> actual, final Function<A, D> mapper) {
