@@ -14,28 +14,39 @@ public class CastMember extends AggregateRoot<CastMemberID> {
     public Instant createdAt;
     public Instant updatedAt;
 
-    public CastMember(final CastMemberID anId, final String aName, final CastMemberType aType, final Instant aCreationDate, final Instant aUpdationDate) {
+    public CastMember(final CastMemberID anId, final String aName, final CastMemberType aType, final Instant aCreationDate, final Instant aUpdateDate) {
         super(anId);
         this.name = aName;
         this.type = aType;
         this.createdAt = aCreationDate;
-        this.updatedAt = aUpdationDate;
+        this.updatedAt = aUpdateDate;
         selfValidate();
     }
-    public static CastMember newMember(final String aName, final CastMemberType aType){
+
+    public static CastMember newMember(final String aName, final CastMemberType aType) {
         final var anId = CastMemberID.unique();
         final var now = InstantUtils.now();
-        return new CastMember(anId, aName, aType, now,now);
+        return new CastMember(anId, aName, aType, now, now);
     }
-    public CastMember update(final String aName, final CastMemberType aType){
+
+    public static CastMember with(final CastMemberID anId, final String aName, final CastMemberType aType, final Instant aCreationDate, final Instant aUpdateDate) {
+        return new CastMember(anId, aName, aType, aCreationDate, aUpdateDate);
+    }
+
+    public static CastMember with(final CastMember aMember) {
+        return new CastMember(aMember.id, aMember.name, aMember.type, aMember.createdAt, aMember.updatedAt);
+    }
+
+    public CastMember update(final String aName, final CastMemberType aType) {
         this.name = aName;
         this.type = aType;
         this.updatedAt = InstantUtils.now();
         selfValidate();
         return this;
     }
+
     @Override
-    public void validate(final ValidationHandler aHandler){
+    public void validate(final ValidationHandler aHandler) {
         new CastMemberValidator(this, aHandler).validate();
     }
 
@@ -55,11 +66,11 @@ public class CastMember extends AggregateRoot<CastMemberID> {
         return updatedAt;
     }
 
-    private void selfValidate(){
+    private void selfValidate() {
         final var notification = Notification.create();
         validate(notification);
 
-        if (notification.hasError()){
+        if (notification.hasError()) {
             throw new NotificationException("Failed to create a Aggregate CastMember", notification);
         }
     }
