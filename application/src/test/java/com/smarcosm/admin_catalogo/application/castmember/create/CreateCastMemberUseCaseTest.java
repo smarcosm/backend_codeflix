@@ -2,20 +2,13 @@ package com.smarcosm.admin_catalogo.application.castmember.create;
 
 import com.smarcosm.admin_catalogo.application.Fixture;
 import com.smarcosm.admin_catalogo.application.UseCaseTest;
-import com.smarcosm.admin_catalogo.application.genre.create.CreateGenreCommand;
-import com.smarcosm.admin_catalogo.application.genre.create.DefaultCreateGenreUseCase;
-import com.smarcosm.admin_catalogo.domain.castmember.CastMember;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberGateway;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberType;
-import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
-import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.domain.exception.NotificationException;
-import com.smarcosm.admin_catalogo.domain.genre.GenreGateway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import java.util.List;
 import java.util.Objects;
@@ -63,4 +56,48 @@ public class CreateCastMemberUseCaseTest extends UseCaseTest {
         ));
     }
 
+    @Test
+    public void givenAInvalidName_whenCallsCreateCastMember_shouldThrowsNotificationException() {
+        // given
+        final String expectedName = null;
+        final var expectedType = Fixture.CastMember.type();
+        final var expectedErrorCount = 1;
+        final var expectedErrorMessage = "'name' should not be null";
+
+        final var aCommand = CreateCastMemberCommand.with(expectedName, expectedType);
+
+        // when
+        final var actualException = Assertions.assertThrows(NotificationException.class, () -> {
+            useCase.execute(aCommand);
+        });
+
+        // then
+        Assertions.assertNotNull(actualException);
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+
+        verify(castMemberGateway, times(0)).create(any());
+    }
+    @Test
+    public void givenAInvalidType_whenCallsCreateCastMember_shouldThrowsNotificationException() {
+        // given
+        final var expectedName = Fixture.name();
+        final CastMemberType expectedType = null;
+        final var expectedErrorCount = 1;
+        final var expectedErrorMessage = "'type' should not be null";
+
+        final var aCommand = CreateCastMemberCommand.with(expectedName, expectedType);
+
+        // when
+        final var actualException = Assertions.assertThrows(NotificationException.class, () -> {
+            useCase.execute(aCommand);
+        });
+
+        // then
+        Assertions.assertNotNull(actualException);
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+
+        verify(castMemberGateway, times(0)).create(any());
+    }
 }
