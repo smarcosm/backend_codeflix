@@ -150,7 +150,7 @@ public class CastMemberTest {
         final var expectedErrorMessage = "'name' should not be empty";
 
 
-        final var actualMember = CastMember.newMember("vind", expectedType);
+        final var actualMember = CastMember.newMember("vind", CastMemberType.DIRECTOR);
 
         Assertions.assertNotNull(actualMember);
         Assertions.assertNotNull(actualMember.getId());
@@ -174,7 +174,7 @@ public class CastMemberTest {
         final var expectedErrorMessage = "'type' should not be null";
 
 
-        final var actualMember = CastMember.newMember("vind", expectedType);
+        final var actualMember = CastMember.newMember(expectedName, CastMemberType.DIRECTOR);
 
         Assertions.assertNotNull(actualMember);
         Assertions.assertNotNull(actualMember.getId());
@@ -199,7 +199,7 @@ public class CastMemberTest {
                                 """;
         final var expectedType = CastMemberType.ACTOR;
         final var expectedErrorCount = 1;
-        final var expectedErrorMessage = "'name' should not be empty";
+        final var expectedErrorMessage = "'name' must be between 3 and 255 characters";
 
 
         final var actualMember = CastMember.newMember("vind", expectedType);
