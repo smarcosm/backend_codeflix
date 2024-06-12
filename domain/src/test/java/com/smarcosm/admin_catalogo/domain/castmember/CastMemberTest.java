@@ -66,7 +66,7 @@ public class CastMemberTest {
                                 """;
         final var expectedType = CastMemberType.ACTOR;
         final var expectedErrorCount = 1;
-        final var expectedErrorMessage = "'name' must be between 1 and 255 characters";
+        final var expectedErrorMessage = "'name' must be between 3 and 255 characters";
 
         final var actualException = Assertions.assertThrows(
                 NotificationException.class,
@@ -83,7 +83,7 @@ public class CastMemberTest {
         final var expectedName = "Vin Diesel";
         final CastMemberType expectedType = null;
         final var expectedErrorCount = 1;
-        final var expectedErrorMessage = "'name' must be between 1 and 255 characters";
+        final var expectedErrorMessage = "'type' should not be null";
 
         final var actualException = Assertions.assertThrows(
                 NotificationException.class,
