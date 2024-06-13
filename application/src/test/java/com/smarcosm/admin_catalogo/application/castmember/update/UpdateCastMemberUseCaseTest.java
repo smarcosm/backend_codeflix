@@ -2,7 +2,6 @@ package com.smarcosm.admin_catalogo.application.castmember.update;
 
 import com.smarcosm.admin_catalogo.application.Fixture;
 import com.smarcosm.admin_catalogo.application.UseCaseTest;
-import com.smarcosm.admin_catalogo.application.castmember.create.CreateCastMemberCommand;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMember;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberGateway;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberID;
@@ -24,15 +23,17 @@ import static org.mockito.Mockito.*;
 
 public class UpdateCastMemberUseCaseTest extends UseCaseTest {
     @InjectMocks
-    private UpdateCastMemberUseCase useCase;
+    private DefaultUpdateCastMemberUseCase useCase;
     @Mock
     private CastMemberGateway castMemberGateway;
+
     @Override
     protected List<Object> getMocks() {
         return List.of(castMemberGateway);
     }
+
     @Test
-    public void givenAValidCommand_whenCallsUpdateCastMember_shouldReturnItsIdentifier(){
+    public void givenAValidCommand_whenCallsUpdateCastMember_shouldReturnItsIdentifier() {
         // given
         final var aMember = CastMember.newMember("vin diesel", CastMemberType.DIRECTOR);
         final var expectedId = aMember.getId();
@@ -41,7 +42,7 @@ public class UpdateCastMemberUseCaseTest extends UseCaseTest {
 
         final var aCommand = UpdateCastMemberCommand.with(expectedId.getValue(), expectedName, expectedType);
         when(castMemberGateway.findById(any()))
-                .thenReturn(Optional.of(aMember));
+                .thenReturn(Optional.of(CastMember.with(aMember)));
 
         when(castMemberGateway.update(any()))
                 .thenAnswer(returnsFirstArg());
@@ -54,7 +55,7 @@ public class UpdateCastMemberUseCaseTest extends UseCaseTest {
         Assertions.assertEquals(expectedId.getValue(), actualOutput.id());
 
         verify(castMemberGateway).findById(eq(expectedId));
-        verify(castMemberGateway).create(argThat(aUpdateMember ->
+        verify(castMemberGateway).update(argThat(aUpdateMember ->
                 Objects.equals(expectedId, aUpdateMember.getId())
                         && Objects.equals(expectedName, aUpdateMember.getName())
                         && Objects.equals(expectedType, aUpdateMember.getType())
@@ -62,8 +63,9 @@ public class UpdateCastMemberUseCaseTest extends UseCaseTest {
                         && aMember.getUpdatedAt().isBefore(aUpdateMember.getUpdatedAt())
         ));
     }
+
     @Test
-    public void givenAInvalidName_whenCallsUpdateCastMember_shouldThrowsNotificationException(){
+    public void givenAInvalidName_whenCallsUpdateCastMember_shouldThrowsNotificationException() {
         // given
         final var aMember = CastMember.newMember("vin diesel", CastMemberType.DIRECTOR);
         final var expectedId = aMember.getId();
@@ -93,8 +95,9 @@ public class UpdateCastMemberUseCaseTest extends UseCaseTest {
 
 
     }
+
     @Test
-    public void givenAInvalidType_whenCallsUpdateCastMember_shouldThrowsNotificationException(){
+    public void givenAInvalidType_whenCallsUpdateCastMember_shouldThrowsNotificationException() {
         // given
         final var aMember = CastMember.newMember("vin diesel", CastMemberType.DIRECTOR);
         final var expectedId = aMember.getId();
@@ -102,7 +105,7 @@ public class UpdateCastMemberUseCaseTest extends UseCaseTest {
         final CastMemberType expectedType = null;
 
         final var expectedErrorCount = 1;
-        final var expectedErrorMessage = "'Type' should not be null";
+        final var expectedErrorMessage = "'type' should not be null";
 
         final var aCommand = UpdateCastMemberCommand.with(expectedId.getValue(), expectedName, expectedType);
         when(castMemberGateway.findById(any()))
@@ -124,8 +127,9 @@ public class UpdateCastMemberUseCaseTest extends UseCaseTest {
 
 
     }
+
     @Test
-    public void givenAInvalidType_whenCallsUpdateCastMember_shouldThrowsNotificationException(){
+    public void givenAInvalidId_whenCallsUpdateCastMember_shouldThrowsNotFoundException() {
         // given
         final var aMember = CastMember.newMember("vin diesel", CastMemberType.DIRECTOR);
         final var expectedId = CastMemberID.from("123");

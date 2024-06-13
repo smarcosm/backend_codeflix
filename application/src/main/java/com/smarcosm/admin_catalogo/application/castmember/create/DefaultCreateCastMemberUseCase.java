@@ -23,7 +23,7 @@ public final class DefaultCreateCastMemberUseCase extends CreateCastMemberUseCas
 
         final var aMember = notification.validate(() -> CastMember.newMember(aName, aType));
 
-        if (notification.hasError()){
+        if (notification.hasError()) {
             notify(notification);
         }
 
