@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 public class DeleteCastMemberUseCaseTest extends UseCaseTest {
     @InjectMocks
-    private DefaultDeleteCatMemberUseCase useCase;
+    private DefaultDeleteCastMemberUseCase useCase;
     @Mock
     private CastMemberGateway castMemberGateway;
 
