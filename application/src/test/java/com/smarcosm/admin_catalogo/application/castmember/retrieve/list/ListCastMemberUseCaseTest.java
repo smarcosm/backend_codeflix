@@ -2,12 +2,8 @@ package com.smarcosm.admin_catalogo.application.castmember.retrieve.list;
 
 import com.smarcosm.admin_catalogo.application.Fixture;
 import com.smarcosm.admin_catalogo.application.UseCaseTest;
-import com.smarcosm.admin_catalogo.application.genre.retrieve.list.DefaultListGenresUseCase;
-import com.smarcosm.admin_catalogo.application.genre.retrieve.list.GenreListOutput;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMember;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberGateway;
-import com.smarcosm.admin_catalogo.domain.genre.Genre;
-import com.smarcosm.admin_catalogo.domain.genre.GenreGateway;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
 import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
 import org.junit.jupiter.api.Assertions;
@@ -48,14 +44,14 @@ public class ListCastMemberUseCaseTest extends UseCaseTest {
 
         final var expectedPage = 0;
         final var expectedPerPage = 10;
-        final var expectedTerms = "A";
+        final var expectedTerms = "Algo";
         final var expectedSort = "createdAt";
         final var expectedDirect = "asc";
         final var expectedTotal = 2;
 
         final var expectedItems =  members.stream().map(CastMemberListOutput::from).toList();
 
-        final var expectedPagination = new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems);
+        final var expectedPagination = new Pagination<>(expectedPage, expectedPerPage, expectedTotal, members);
 
         when(castMemberGateway.findAll(any())).thenReturn(expectedPagination);
 
@@ -79,14 +75,15 @@ public class ListCastMemberUseCaseTest extends UseCaseTest {
         //given
         final var expectedPage = 0;
         final var expectedPerPage = 10;
-        final var expectedTerms = "A";
+        final var expectedTerms = "Algo";
         final var expectedSort = "createdAt";
         final var expectedDirect = "asc";
         final var expectedTotal = 0;
-
+        final var members =  List.<CastMember>of();
         final var expectedItems =  List.<CastMemberListOutput>of();
 
-        final var expectedPagination = new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems);
+
+        final var expectedPagination = new Pagination<>(expectedPage, expectedPerPage, expectedTotal, members);
 
         when(castMemberGateway.findAll(any())).thenReturn(expectedPagination);
 
@@ -109,12 +106,11 @@ public class ListCastMemberUseCaseTest extends UseCaseTest {
         //given
         final var expectedPage = 0;
         final var expectedPerPage = 10;
-        final var expectedTerms = "A";
+        final var expectedTerms = "Algo";
         final var expectedSort = "createdAt";
         final var expectedDirection = "asc";
 
         final var expectedErrorMessage = "Gateway error";
-        final var expectedPagination = new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems);
 
         when(castMemberGateway.findAll(any())).thenThrow(new IllegalStateException(expectedErrorMessage));
 
