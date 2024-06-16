@@ -23,6 +23,7 @@ public class MySQLCleanUpExtension implements BeforeEachCallback {
 //
 //
 //        cleanUp(List.of(
+//                appContext.getBen(CastMemberRepository.class),
 //                appContext.getBean(GenreRepository.class),
 //                appContext.getBean(CategoryRepository.class)
 //        ));
