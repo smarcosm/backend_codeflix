@@ -34,7 +34,7 @@ public class CastMemberJpaEntity {
         this.updatedAt = updatedAt;
     }
 
-    public CastMemberJpaEntity from(final CastMember aMember) {
+    public static CastMemberJpaEntity from(final CastMember aMember) {
         return new CastMemberJpaEntity(
                 aMember.getId().getValue(),
                 aMember.getName(),

@@ -5,6 +5,7 @@ import com.smarcosm.admin_catalogo.domain.castmember.CastMemberGateway;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberID;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
 import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
+import com.smarcosm.admin_catalogo.infrastructure.castmember.persistence.CastMemberJpaEntity;
 import com.smarcosm.admin_catalogo.infrastructure.castmember.persistence.CastMemberRepository;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,7 @@ public class CastMemberMySQLGateway implements CastMemberGateway {
 
     @Override
     public CastMember create(final CastMember aCastMember) {
-        return null;
+        return save(aCastMember);
     }
 
     @Override
@@ -42,5 +43,10 @@ public class CastMemberMySQLGateway implements CastMemberGateway {
     @Override
     public Pagination<CastMember> findAll(final SearchQuery aQuery) {
         return null;
+    }
+
+    private CastMember save(final CastMember aCastMember) {
+        return this.castMemberRepository.save(CastMemberJpaEntity.from(aCastMember))
+                .toAggregate();
     }
 }
