@@ -2,6 +2,7 @@ package com.smarcosm.admin_catalogo.infrastructure.castmember;
 
 import com.smarcosm.admin_catalogo.MySQLGatewayTest;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMember;
+import com.smarcosm.admin_catalogo.domain.castmember.CastMemberID;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberType;
 import com.smarcosm.admin_catalogo.infrastructure.castmember.persistence.CastMemberJpaEntity;
 import com.smarcosm.admin_catalogo.infrastructure.castmember.persistence.CastMemberRepository;
@@ -89,5 +90,35 @@ class CastMemberMySQLGatewayTest {
         Assertions.assertEquals(expectedType, persistedMember.getType());
         Assertions.assertEquals(aMember.getCreatedAt(), persistedMember.getCreatedAt());
         Assertions.assertTrue(aMember.getUpdatedAt().isBefore(persistedMember.getUpdatedAt()));
+    }
+
+    @Test
+    public void givenAValidCastMember_whenCallsDeleteById_shouldDeleteIt() {
+        // given
+        final var aMember = CastMember.newMember(name(), type());
+
+        final var currentMember = castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
+        Assertions.assertEquals(1, castMemberRepository.count());
+
+        // when
+        castMemberGateway.deleteById(aMember.getId());
+
+        // then
+        Assertions.assertEquals(0, castMemberRepository.count());
+
+    }
+    @Test
+    public void givenAnInvalidCastMember_whenCallsDeleteById_shouldBeIgnored() {
+        // given
+        final var aMember = CastMember.newMember(name(), type());
+
+        final var currentMember = castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
+        Assertions.assertEquals(1, castMemberRepository.count());
+
+        // when
+        castMemberGateway.deleteById(CastMemberID.from("123"));
+
+        // then
+        Assertions.assertEquals(1, castMemberRepository.count());
     }
 }
