@@ -60,16 +60,18 @@ class CastMemberMySQLGatewayTest {
         // given
         final var expectedName = name();
         final var expectedType = CastMemberType.ACTOR;
+
         final var aMember = CastMember.newMember("vind", CastMemberType.DIRECTOR);
         final var expectedId = aMember.getId();
 
         final var currentMember = castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
+
         Assertions.assertEquals(1, castMemberRepository.count());
         Assertions.assertEquals("vind", currentMember.getName());
         Assertions.assertEquals(CastMemberType.DIRECTOR, currentMember.getType());
 
         // when
-        final var actualMember = castMemberGateway.update(CastMember.with(aMember.update(expectedName, expectedType)));
+        final var actualMember = castMemberGateway.update(CastMember.with(aMember).update(expectedName, expectedType));
 
         // then
         Assertions.assertEquals(1, castMemberRepository.count());
