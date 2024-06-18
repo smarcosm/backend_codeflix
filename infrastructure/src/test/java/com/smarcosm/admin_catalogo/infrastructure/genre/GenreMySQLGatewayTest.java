@@ -490,6 +490,7 @@ public class GenreMySQLGatewayTest {
     ) {
         // given
         mockGenres();
+
         final var expectedTerms = "";
         final var expectedSort = "name";
         final var expectedDirection = "asc";
