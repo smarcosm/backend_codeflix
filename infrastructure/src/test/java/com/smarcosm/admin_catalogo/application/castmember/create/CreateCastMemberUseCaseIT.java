@@ -1,4 +1,4 @@
-package com.smarcosm.admin_catalogo.e2e.castmember.create;
+package com.smarcosm.admin_catalogo.application.castmember.create;
 
 import com.smarcosm.admin_catalogo.Fixture;
 import com.smarcosm.admin_catalogo.IntegrationTest;
@@ -50,7 +50,6 @@ public class CreateCastMemberUseCaseIT {
 
         verify(castMemberGateway).create(any());
     }
-
     @Test
     public void givenAInvalidName_whenCallsCreateCastMember_shouldThrowsNotificationException() {
         // given
