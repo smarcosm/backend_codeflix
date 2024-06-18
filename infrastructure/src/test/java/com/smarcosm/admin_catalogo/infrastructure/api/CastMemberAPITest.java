@@ -1,20 +1,18 @@
 package com.smarcosm.admin_catalogo.infrastructure.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smarcosm.admin_catalogo.ControllerTest;
 import com.smarcosm.admin_catalogo.Fixture;
 import com.smarcosm.admin_catalogo.application.castmember.create.CreateCastMemberOutput;
-import com.smarcosm.admin_catalogo.application.castmember.create.CreateCastMemberUseCase;
-import com.smarcosm.admin_catalogo.application.castmember.delete.DeleteCastMemberUseCase;
-import com.smarcosm.admin_catalogo.application.castmember.retrieve.get.GetCastMemberByIdUseCase;
-import com.smarcosm.admin_catalogo.application.castmember.retrieve.list.ListCastMembersUseCase;
-import com.smarcosm.admin_catalogo.application.castmember.update.UpdateCastMemberUseCase;
-import com.smarcosm.admin_catalogo.application.genre.create.CreateGenreOutput;
+import com.smarcosm.admin_catalogo.application.castmember.create.DefaultCreateCastMemberUseCase;
+import com.smarcosm.admin_catalogo.application.castmember.delete.DefaultDeleteCastMemberUseCase;
+import com.smarcosm.admin_catalogo.application.castmember.retrieve.get.DefaultGetCastMemberByIdUseCase;
+import com.smarcosm.admin_catalogo.application.castmember.retrieve.list.DefaultListCastMembersUseCase;
+import com.smarcosm.admin_catalogo.application.castmember.update.DefaultUpdateCastMemberUseCase;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberID;
-import com.smarcosm.admin_catalogo.domain.exception.NotFoundException;
 import com.smarcosm.admin_catalogo.domain.exception.NotificationException;
 import com.smarcosm.admin_catalogo.domain.validation.Error;
-import com.smarcosm.admin_catalogo.domain.validation.handler.Notification;
-import com.smarcosm.admin_catalogo.infrastructure.genre.models.CreateGenreRequest;
+import com.smarcosm.admin_catalogo.infrastructure.castmember.models.CreateCastMemberRequest;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -23,9 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.List;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.*;
@@ -43,15 +39,15 @@ public class CastMemberAPITest {
     @Autowired
     private ObjectMapper mapper;
     @MockBean
-    private CreateCastMemberUseCase createCastMemberUseCase;
+    private DefaultCreateCastMemberUseCase createCastMemberUseCase;
     @MockBean
-    private DeleteCastMemberUseCase deleteCastMemberUseCase;
+    private DefaultDeleteCastMemberUseCase deleteCastMemberUseCase;
     @MockBean
-    private GetCastMemberByIdUseCase getCastMemberByIdUseCase;
+    private DefaultGetCastMemberByIdUseCase getCastMemberByIdUseCase;
     @MockBean
-    private ListCastMembersUseCase listCastMembersUseCase;
+    private DefaultListCastMembersUseCase listCastMembersUseCase;
     @MockBean
-    private UpdateCastMemberUseCase updateCastMemberUseCase;
+    private DefaultUpdateCastMemberUseCase updateCastMemberUseCase;
 
     @Test
     public void givenAValidCommand_whenCallsCreateCastMember_shouldReturnItsIdentifier() throws Exception {

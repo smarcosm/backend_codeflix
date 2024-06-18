@@ -7,7 +7,7 @@ import com.smarcosm.admin_catalogo.domain.validation.handler.Notification;
 
 import java.util.Objects;
 
-public final class DefaultCreateCastMemberUseCase extends CreateCastMemberUseCase {
+public non-sealed class DefaultCreateCastMemberUseCase extends CreateCastMemberUseCase {
     private final CastMemberGateway castMemberGateway;
 
     public DefaultCreateCastMemberUseCase(final CastMemberGateway castMemberGateway) {
