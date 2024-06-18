@@ -222,15 +222,15 @@ class CastMemberMySQLGatewayTest {
         Assertions.assertEquals(expectedPerPage, actualPage.perPage());
         Assertions.assertEquals(expectedTotal, actualPage.total());
         Assertions.assertEquals(expectedItemsCount, actualPage.items().size());
-        Assertions.assertEquals(expectedName, actualPage.items().get(0).getName());
+       Assertions.assertEquals(expectedName, actualPage.items().get(0).getName());
 
     }
     @ParameterizedTest
     @CsvSource({
-            "name,asc,10,5,5,Jason Mamoa",
-            "name,desc,10,5,5,Vin Diesel",
-            "createdAt,asc,10,5,5,Kit Harington",
-            "createdAt,desc,10,5,5,Martin Scorsese"
+            "name,asc,0,10,5,5,Jason Mamoa",
+            "name,desc,0,10,5,5,Vin Diesel",
+            "createdAt,asc,0,10,5,5,Kit Harington",
+            "createdAt,desc,0,10,5,5,Martin Scorsese"
 
     })
     public void givenAValidSortAndDirection_whenCallsFindById_shouldReturnSorted(
@@ -263,9 +263,9 @@ class CastMemberMySQLGatewayTest {
     }
     @ParameterizedTest
     @CsvSource({
-            "0,2,5,2,Jason Mamoa;Kit Harington",
-            "1,2,5,2,Martin Scorsese;Quentin Tarantino",
-            "2,2,5,1,Vin Diesel"
+            "0,2,2,5,Jason Mamoa;Kit Harington",
+            "1,2,2,5,Martin Scorsese;Quentin Tarantino",
+            "2,2,1,5,Vin Diesel"
 
     })
     public void givenAValidPagination_whenCallsFindById_shouldReturnPaginated(
