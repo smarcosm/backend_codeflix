@@ -2,6 +2,7 @@ package com.smarcosm.admin_catalogo.infrastructure.api.controllers;
 
 import com.smarcosm.admin_catalogo.application.castmember.create.CreateCastMemberCommand;
 import com.smarcosm.admin_catalogo.application.castmember.create.CreateCastMemberUseCase;
+import com.smarcosm.admin_catalogo.application.castmember.delete.DeleteCastMemberUseCase;
 import com.smarcosm.admin_catalogo.application.castmember.retrieve.get.GetCastMemberByIdUseCase;
 import com.smarcosm.admin_catalogo.application.castmember.update.UpdateCastMemberCommand;
 import com.smarcosm.admin_catalogo.application.castmember.update.UpdateCastMemberUseCase;
@@ -19,16 +20,16 @@ import java.util.Objects;
 @RestController
 public class CastMemberController implements CastMemberAPI {
     private final CreateCastMemberUseCase createCastMemberUseCase;
-
+    private final DeleteCastMemberUseCase deleteCastMemberUseCase;
     private final GetCastMemberByIdUseCase getCastMemberByIdUseCase;
     private final UpdateCastMemberUseCase updateCastMemberUseCase;
 
     public CastMemberController(
             final CreateCastMemberUseCase createCastMemberUseCase,
-             final GetCastMemberByIdUseCase getCastMemberByIdUseCase,
+            final DeleteCastMemberUseCase deleteCastMemberUseCase, final GetCastMemberByIdUseCase getCastMemberByIdUseCase,
             final UpdateCastMemberUseCase updateCastMemberUseCase) {
         this.createCastMemberUseCase = Objects.requireNonNull(createCastMemberUseCase);
-
+        this.deleteCastMemberUseCase = Objects.requireNonNull(deleteCastMemberUseCase);
         this.getCastMemberByIdUseCase = Objects.requireNonNull(getCastMemberByIdUseCase);
         this.updateCastMemberUseCase = Objects.requireNonNull(updateCastMemberUseCase);
     }
@@ -57,5 +58,8 @@ public class CastMemberController implements CastMemberAPI {
         return ResponseEntity.ok(output);
     }
 
-
+    @Override
+    public void deleteById(final String id) {
+        this.deleteCastMemberUseCase.execute(id);
+    }
 }

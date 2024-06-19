@@ -50,4 +50,13 @@ public interface CastMemberAPI {
     })
     ResponseEntity<?> updateById(@PathVariable String id, @RequestBody UpdateCastMemberRequest aBody);
 
+    @DeleteMapping(value = "{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary =  "Delete a cast member by it's identifier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "CastMember delete successfully"),
+            @ApiResponse(responseCode = "404", description = "CastMember was not found"),
+            @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
+    })
+    void deleteById(@PathVariable String id);
 }
