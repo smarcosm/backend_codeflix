@@ -18,6 +18,7 @@ import com.smarcosm.admin_catalogo.domain.exception.NotFoundException;
 import com.smarcosm.admin_catalogo.domain.exception.NotificationException;
 import com.smarcosm.admin_catalogo.domain.validation.Error;
 import com.smarcosm.admin_catalogo.infrastructure.castmember.models.CreateCastMemberRequest;
+import com.smarcosm.admin_catalogo.infrastructure.castmember.models.UpdateCastMemberRequest;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,11 +34,8 @@ import java.util.Objects;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -88,6 +86,7 @@ public class CastMemberAPITest {
                         && Objects.equals(expectedType, actualCmd.type())
         ));
     }
+
     @Test
     public void givenAnInvalidName_whenCallsCreateCastMember_thenShouldReturnNotification() throws Exception {
         // given
@@ -120,6 +119,7 @@ public class CastMemberAPITest {
                         && Objects.equals(expectedType, actualCmd.type())
         ));
     }
+
     @Test
     public void givenAValidId_whenCallsGetById_shouldReturnIt() throws Exception {
         // given
@@ -147,6 +147,7 @@ public class CastMemberAPITest {
         verify(getCastMemberByIdUseCase).execute(eq(expectedId));
 
     }
+
     @Test
     public void givenAnInvalidId_whenCallsGetByIdAndCastMemberDoNotExists_shouldReturnNotFound() throws Exception {
         // given
@@ -170,6 +171,7 @@ public class CastMemberAPITest {
         verify(getCastMemberByIdUseCase).execute(eq(expectedId.getValue()));
 
     }
+
     @Test
     public void givenAValidCommand_whenCallsUpdateCastMember_shouldReturnItsIdentifier() throws Exception {
         // given
@@ -201,6 +203,7 @@ public class CastMemberAPITest {
                         && Objects.equals(expectedType, actualCmd.type())
         ));
     }
+
     @Test
     public void givenAnInvalidName_whenCallsUpdateCastMember_thenShouldReturnNotification() throws Exception {
         // given
@@ -229,21 +232,22 @@ public class CastMemberAPITest {
                 .andExpect(header().string("Location", nullValue()))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors", hasSize(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
 
         Mockito.verify(updateCastMemberUseCase).execute(argThat(actualCmd ->
-                Objects.equals(expectedId, actualCmd.id())
+                Objects.equals(expectedId.getValue(), actualCmd.id())
                         && Objects.equals(expectedName, actualCmd.name())
                         && Objects.equals(expectedType, actualCmd.type())
         ));
     }
+
     @Test
     public void givenAnInvalidId_whenCallsUpdateCastMember_thenShouldReturnNotFound() throws Exception {
         // given
         final var expectedId = CastMemberID.from("123");
         final var expectedName = Fixture.name();
         final var expectedType = Fixture.CastMember.type();
-        final var expectedErrorMessage = "Could not update Aggregate CastMember 123";
+        final var expectedErrorMessage = "CastMember with ID 123 was not found";
 
 
         final var aCommand =
@@ -262,12 +266,32 @@ public class CastMemberAPITest {
         aResponse.andExpect(status().isNotFound())
                 .andExpect(header().string("Location", nullValue()))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+                .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
 
         Mockito.verify(updateCastMemberUseCase).execute(argThat(actualCmd ->
-                Objects.equals(expectedId, actualCmd.id())
+                Objects.equals(expectedId.getValue(), actualCmd.id())
                         && Objects.equals(expectedName, actualCmd.name())
                         && Objects.equals(expectedType, actualCmd.type())
         ));
+    }
+
+    @Test
+    public void givenAValidId_whenCallsDeleteById_shouldDeleteIt() throws Exception {
+        // given
+        final var expectedId = "123";
+
+        doNothing().when(deleteCastMemberUseCase).execute(any());
+
+        // when
+        final var aRequest = delete("/cast_members/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON);
+
+        final var response = this.mvc.perform(aRequest);
+
+        // then
+        response.andExpect(status().isNoContent());
+
+        verify(deleteCastMemberUseCase).execute(eq(expectedId));
+
     }
 }
