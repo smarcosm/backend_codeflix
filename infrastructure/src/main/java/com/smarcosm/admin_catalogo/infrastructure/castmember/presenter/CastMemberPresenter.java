@@ -10,9 +10,9 @@ public interface CastMemberPresenter {
         return new CastMemberResponse(
                 aMember.id(),
                 aMember.name(),
-                aMember.type(),
-                aMember.createdAt(),
-                aMember.updatedAt()
+                aMember.type().name(),
+                aMember.createdAt().toString(),
+                aMember.updatedAt().toString()
         );
     }
     static CastMemberListResponse present(final CastMemberListOutput aMember) {
