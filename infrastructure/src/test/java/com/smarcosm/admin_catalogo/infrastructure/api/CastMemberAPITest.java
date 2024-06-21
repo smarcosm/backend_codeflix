@@ -301,11 +301,11 @@ public class CastMemberAPITest {
         // give
         final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
 
-        final var expectedPage = 0;
+        final var expectedPage = 1;
         final var expectedPerPage = 20;
         final var expectedTerms = "Alg";
         final var expectedSort = "name";
-        final var expectedDirect = "desc";
+        final var expectedDirection = "desc";
 
         final var expectedItemsCount = 1;
         final var expectedTotal = 1;
@@ -319,7 +319,7 @@ public class CastMemberAPITest {
                     .queryParam("perPage", String.valueOf(expectedPerPage))
                     .queryParam("search", expectedTerms)
                     .queryParam("sot", expectedSort)
-                    .queryParam("dir", expectedDirect)
+                    .queryParam("dir", expectedDirection)
                     .accept(MediaType.APPLICATION_JSON);
 
             final var response = this.mvc.perform(aRequest);
@@ -335,12 +335,12 @@ public class CastMemberAPITest {
                 .andExpect(jsonPath("$.items[0].type", equalTo(aMember.getType().name())))
                 .andExpect(jsonPath("$.items[0].created_at", equalTo(aMember.getCreatedAt().toString())));
 
-        verify(listCastMembersUseCase).execute(argThat(aQuery ->
+       verify(listCastMembersUseCase).execute(argThat(aQuery ->
                 Objects.equals(expectedPage, aQuery.page())
                 && Objects.equals(expectedPerPage, aQuery.perPage())
                 && Objects.equals(expectedTerms, aQuery.terms())
                 && Objects.equals(expectedSort, aQuery.sort())
-                && Objects.equals(expectedDirect, aQuery.direction())
+                && Objects.equals(expectedDirection, aQuery.direction())
         ));
     }
     @Test

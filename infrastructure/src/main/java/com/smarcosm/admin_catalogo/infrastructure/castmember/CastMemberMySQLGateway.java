@@ -31,10 +31,10 @@ public class CastMemberMySQLGateway implements CastMemberGateway {
 
     @Override
     public void deleteById(final CastMemberID aMemberId) {
-    final var anId = aMemberId.getValue();
-    if (this.castMemberRepository.existsById(anId)){
-        this.castMemberRepository.deleteById(anId);
-    }
+        final var anId = aMemberId.getValue();
+        if (this.castMemberRepository.existsById(anId)) {
+            this.castMemberRepository.deleteById(anId);
+        }
     }
 
     @Override
@@ -74,6 +74,7 @@ public class CastMemberMySQLGateway implements CastMemberGateway {
         return this.castMemberRepository.save(CastMemberJpaEntity.from(aCastMember))
                 .toAggregate();
     }
+
     private Specification<CastMemberJpaEntity> assembleSpecification(final String terms) {
         return SpecificationUtils.like("name", terms);
     }

@@ -19,8 +19,8 @@ public interface CastMemberPresenter {
         return new CastMemberListResponse(
                 aMember.id(),
                 aMember.name(),
-                aMember.type().name(),
-                aMember.createdAt().toString()
+                aMember.type(),
+                aMember.createdAt()
 
         );
     }
