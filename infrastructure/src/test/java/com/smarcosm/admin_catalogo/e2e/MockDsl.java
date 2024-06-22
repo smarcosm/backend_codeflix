@@ -31,10 +31,16 @@ public interface MockDsl {
     MockMvc mvc();
 
     // CastMember
-    default CastMemberID givenACastMember(final String aName, final CastMemberType aType ) throws Exception {
+    default CastMemberID givenACastMember(final String aName, final CastMemberType aType) throws Exception {
         final var aRequestBody = new CreateCastMemberRequest(aName, aType);
         final var actualId = this.given("/cast_members", aRequestBody);
         return CastMemberID.from(actualId);
+    }
+
+    default ResultActions givenACastMemberResult(final String aName, final CastMemberType aType) throws Exception {
+        final var aRequestBody = new CreateCastMemberRequest(aName, aType);
+        return this.givenResult("/cast_members", aRequestBody);
+
     }
 
     // Category
@@ -81,6 +87,7 @@ public interface MockDsl {
         final var actualId = this.given("/genres", aRequestBody);
         return GenreID.from(actualId);
     }
+
     default ResultActions listGenres(final int page, final int perPage) throws Exception {
         return listGenres(page, perPage, "", "", "");
     }
@@ -92,26 +99,33 @@ public interface MockDsl {
     default ResultActions listGenres(final int page, final int perPage, final String search, final String sort, final String direction) throws Exception {
         return this.list("/genres", page, perPage, search, sort, direction);
     }
+
     default GenreResponse retrieveAGenre(final Identifier anId) throws Exception {
         return this.retrieve("/genres/", anId, GenreResponse.class);
 
     }
+
     default ResultActions updateAGenre(final Identifier anId, UpdateGenreRequest aRequest) throws Exception {
         return this.update("/genres/", anId, aRequest);
 
     }
+
     default <A, D> List<D> mapTo(final List<A> actual, final Function<A, D> mapper) {
         return actual.stream().map(mapper).toList();
     }
 
     private String given(final String url, final Object body) throws Exception {
-
-
         final var aRequest = post(url).contentType(MediaType.APPLICATION_JSON).content(Json.writeValueAsString(body));
-
         final var actualId = this.mvc().perform(aRequest).andExpect(status().isCreated()).andReturn().getResponse().getHeader("Location").replace("%s/".formatted(url), "");
 
         return actualId;
+    }
+    private ResultActions givenResult(final String url, final Object body) throws Exception {
+        final var aRequest = post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(body));
+
+        return this.mvc().perform(aRequest);
     }
 
     private ResultActions list(final String url, final int page, final int perPage, final String search, final String sort, final String direction) throws Exception {
