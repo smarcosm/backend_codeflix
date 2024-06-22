@@ -1,8 +1,11 @@
 package com.smarcosm.admin_catalogo.e2e;
 
 import com.smarcosm.admin_catalogo.domain.Identifier;
+import com.smarcosm.admin_catalogo.domain.castmember.CastMemberID;
+import com.smarcosm.admin_catalogo.domain.castmember.CastMemberType;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.domain.genre.GenreID;
+import com.smarcosm.admin_catalogo.infrastructure.castmember.models.CreateCastMemberRequest;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CategoryResponse;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CreateCategoryRequest;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.UpdateCategoryRequest;
@@ -27,6 +30,14 @@ public interface MockDsl {
     @Autowired
     MockMvc mvc();
 
+    // CastMember
+    default CastMemberID givenACastMember(final String aName, final CastMemberType aType ) throws Exception {
+        final var aRequestBody = new CreateCastMemberRequest(aName, aType);
+        final var actualId = this.given("/cast_members", aRequestBody);
+        return CastMemberID.from(actualId);
+    }
+
+    // Category
     default ResultActions deleteACategory(final Identifier anId) throws Exception {
         return this.delete("/categories/", anId);
     }
@@ -59,6 +70,8 @@ public interface MockDsl {
         return this.update("/categories/", anId, aRequest);
 
     }
+
+    // Genre
     default ResultActions deleteAGenre(final Identifier anId) throws Exception {
         return this.delete("/genres/", anId);
     }
