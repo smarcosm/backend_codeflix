@@ -7,6 +7,7 @@ import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.domain.genre.GenreID;
 import com.smarcosm.admin_catalogo.infrastructure.castmember.models.CastMemberResponse;
 import com.smarcosm.admin_catalogo.infrastructure.castmember.models.CreateCastMemberRequest;
+import com.smarcosm.admin_catalogo.infrastructure.castmember.models.UpdateCastMemberRequest;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CategoryResponse;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CreateCategoryRequest;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.UpdateCategoryRequest;
@@ -60,6 +61,10 @@ public interface MockDsl {
     }
     default ResultActions retrieveACastMemberResult(final CastMemberID anId) throws Exception {
         return this.retrieveResult("/cast_members/", anId);
+
+    }
+    default ResultActions updateACastMember(final CastMemberID anId, final String aName, final CastMemberType aType) throws Exception {
+        return this.update("/cast_members/", anId, new UpdateCastMemberRequest(aName, aType));
 
     }
 
