@@ -5,6 +5,7 @@ import com.smarcosm.admin_catalogo.domain.castmember.CastMemberID;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberType;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.domain.genre.GenreID;
+import com.smarcosm.admin_catalogo.infrastructure.castmember.models.CastMemberResponse;
 import com.smarcosm.admin_catalogo.infrastructure.castmember.models.CreateCastMemberRequest;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CategoryResponse;
 import com.smarcosm.admin_catalogo.infrastructure.category.models.CreateCategoryRequest;
@@ -53,7 +54,14 @@ public interface MockDsl {
     default ResultActions listCastMembers(final int page, final int perPage, final String search, final String sort, final String direction) throws Exception {
         return this.list("/cast_members", page, perPage, search, sort, direction);
     }
+    default CastMemberResponse retrieveACastMember(final CastMemberID anId) throws Exception {
+        return this.retrieve("/cast_members/", anId, CastMemberResponse.class);
 
+    }
+    default ResultActions retrieveACastMemberResult(final CastMemberID anId) throws Exception {
+        return this.retrieveResult("/cast_members/", anId);
+
+    }
 
     // Category
     default ResultActions deleteACategory(final Identifier anId) throws Exception {
@@ -79,18 +87,18 @@ public interface MockDsl {
         return this.list("/categories", page, perPage, search, sort, direction);
     }
 
-    default CategoryResponse retrieveACategory(final Identifier anId) throws Exception {
+    default CategoryResponse retrieveACategory(final CategoryID anId) throws Exception {
         return this.retrieve("/categories/", anId, CategoryResponse.class);
 
     }
 
-    default ResultActions updateACategory(final Identifier anId, UpdateCategoryRequest aRequest) throws Exception {
+    default ResultActions updateACategory(final CategoryID anId, UpdateCategoryRequest aRequest) throws Exception {
         return this.update("/categories/", anId, aRequest);
 
     }
 
     // Genre
-    default ResultActions deleteAGenre(final Identifier anId) throws Exception {
+    default ResultActions deleteAGenre(final GenreID anId) throws Exception {
         return this.delete("/genres/", anId);
     }
 
@@ -112,12 +120,12 @@ public interface MockDsl {
         return this.list("/genres", page, perPage, search, sort, direction);
     }
 
-    default GenreResponse retrieveAGenre(final Identifier anId) throws Exception {
+    default GenreResponse retrieveAGenre(final GenreID anId) throws Exception {
         return this.retrieve("/genres/", anId, GenreResponse.class);
 
     }
 
-    default ResultActions updateAGenre(final Identifier anId, UpdateGenreRequest aRequest) throws Exception {
+    default ResultActions updateAGenre(final GenreID anId, UpdateGenreRequest aRequest) throws Exception {
         return this.update("/genres/", anId, aRequest);
 
     }
@@ -154,6 +162,15 @@ public interface MockDsl {
 
         return Json.readValue(json, clazz);
     }
+    private ResultActions retrieveResult(final String url, final Identifier anId) throws Exception {
+
+        final var aRequest = get(url + anId.getValue())
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8);
+
+        return this.mvc().perform(aRequest);
+    }
+
 
     private ResultActions delete(final String url, final Identifier anId) throws Exception {
         final var aRequest = MockMvcRequestBuilders.delete(url + anId.getValue()).contentType(MediaType.APPLICATION_JSON);

@@ -2,6 +2,7 @@ package com.smarcosm.admin_catalogo.e2e.castmember;
 
 import com.smarcosm.admin_catalogo.E2ETest;
 import com.smarcosm.admin_catalogo.Fixture;
+import com.smarcosm.admin_catalogo.domain.castmember.CastMemberID;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberType;
 import com.smarcosm.admin_catalogo.e2e.MockDsl;
 import com.smarcosm.admin_catalogo.infrastructure.castmember.persistence.CastMemberRepository;
@@ -161,6 +162,45 @@ public class CastMemberE2ETest implements MockDsl {
                 .andExpect(jsonPath("$.items[2].name", equalTo("Jason Momoa")))
 
         ;
+
+    }
+    @Test
+    public void asACatalogAdminIShouldBeAbleToGetACastMemberByItsIdentifier() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, castMemberRepository.count());
+
+        final var expectedName = Fixture.name();
+        final var expectedType = Fixture.CastMember.type();
+
+
+        givenACastMember(Fixture.name(), Fixture.CastMember.type());
+        givenACastMember(Fixture.name(), Fixture.CastMember.type());
+
+        final var actualId = givenACastMember(expectedName, expectedType);
+
+        final var actualMember = retrieveACastMember(actualId);
+
+        Assertions.assertEquals(expectedName, actualMember.name());
+        Assertions.assertEquals(expectedType.name(), actualMember.type());
+        Assertions.assertNotNull(actualMember.createdAt());
+        Assertions.assertNotNull(actualMember.updatedAt());
+        Assertions.assertEquals(actualMember.createdAt(), actualMember.updatedAt());
+
+    }
+    @Test
+    public void asACatalogAdminIShouldBeAbleToSeeATreatedErrorByGettingANotFoundCastMember() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, castMemberRepository.count());
+
+
+        givenACastMember(Fixture.name(), Fixture.CastMember.type());
+        givenACastMember(Fixture.name(), Fixture.CastMember.type());
+
+        retrieveACastMemberResult(CastMemberID.from("123"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", equalTo("CastMember with ID 123 was not found")))
+        ;
+
 
     }
 }
