@@ -282,7 +282,5 @@ public class CastMemberE2ETest implements MockDsl {
 
         Assertions.assertEquals(2, castMemberRepository.count());
 
-
-
     }
 }
