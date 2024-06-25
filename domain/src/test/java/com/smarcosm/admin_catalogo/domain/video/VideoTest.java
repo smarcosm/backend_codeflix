@@ -51,14 +51,14 @@ public class VideoTest {
         Assertions.assertNotNull(actualVideo.getId());
         Assertions.assertEquals(expectedTitle, actualVideo.getTitle());
         Assertions.assertEquals(expectedDescription, actualVideo.getDescription());
-        Assertions.assertEquals(expectedLaunchedAt, actualVideo.getLauncheAt());
+        Assertions.assertEquals(expectedLaunchedAt, actualVideo.getLaunchedAt());
         Assertions.assertEquals(expectedDuration, actualVideo.getDuration());
         Assertions.assertEquals(expectedOpened, actualVideo.getOpened());
         Assertions.assertEquals(expectedPublished, actualVideo.getPublished());
         Assertions.assertEquals(expectedRating, actualVideo.getRating());
         Assertions.assertEquals(expectedCategories, actualVideo.getCategories());
         Assertions.assertEquals(expectedGenres, actualVideo.getGenres());
-        Assertions.assertEquals(expectedMembers, actualVideo.getMembers());
+        Assertions.assertEquals(expectedMembers, actualVideo.getCastMembers());
         Assertions.assertTrue(actualVideo.getVideo().isEmpty());
         Assertions.assertTrue(actualVideo.getTrailer().isEmpty());
         Assertions.assertTrue(actualVideo.getBanner().isEmpty());

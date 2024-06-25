@@ -37,7 +37,6 @@ class CastMemberResponseTest {
                 .hasJsonPathValue("$.type", expectedType)
                 .hasJsonPathValue("$.created_at", expectedCreatedAt)
                 .hasJsonPathValue("$.updated_at", expectedUpdatedAt);
-
     }
 
 }
