@@ -21,7 +21,7 @@ public class AudioVideoMedia extends ValueObject {
         this.checksum = Objects.requireNonNull(checksum);
         this.name = Objects.requireNonNull(name);
         this.rawLocation = Objects.requireNonNull(rawLocation);
-        this.encodedLocation = (encodedLocation);
+        this.encodedLocation = Objects.requireNonNull(encodedLocation);
         this.status = Objects.requireNonNull(status);
     }
     public static AudioVideoMedia with(
