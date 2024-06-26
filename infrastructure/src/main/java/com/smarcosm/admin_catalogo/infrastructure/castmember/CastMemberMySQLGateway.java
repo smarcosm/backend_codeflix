@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -67,6 +68,11 @@ public class CastMemberMySQLGateway implements CastMemberGateway {
                 pageResult.getTotalElements(),
                 pageResult.map(CastMemberJpaEntity::toAggregate).toList()
         );
+    }
+
+    @Override
+    public List<CastMemberID> existsByIds(final Iterable<CastMemberID> ids) {
+        throw new UnsupportedOperationException();
     }
 
 

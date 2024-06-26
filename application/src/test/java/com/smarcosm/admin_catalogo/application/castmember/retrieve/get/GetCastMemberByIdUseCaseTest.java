@@ -34,7 +34,7 @@ public class GetCastMemberByIdUseCaseTest extends UseCaseTest {
     public void givenAValidId_whenCallsGetCastMember_shouldReturnIt() {
         // given
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var aMember = CastMember.newMember(expectedName, expectedType);
 
@@ -61,7 +61,7 @@ public class GetCastMemberByIdUseCaseTest extends UseCaseTest {
     public void givenAInvalidId_whenCallsGetCastMemberAndDosNotFound_shouldReturnNotFoundException() {
         // given
         final var expectedId = CastMemberID.from("123");
-        final var expectedMessage = "CastMember with ID 123 was not found";
+        final var expectedMessage = "CastMembers with ID 123 was not found";
         when(castMemberGateway.findById(any()))
                 .thenReturn(Optional.empty());
 

@@ -134,8 +134,8 @@ public class UpdateCastMemberUseCaseTest extends UseCaseTest {
         final var aMember = CastMember.newMember("vin diesel", CastMemberType.DIRECTOR);
         final var expectedId = CastMemberID.from("123");
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
-        final var expectedErrorMessage = "CastMember with ID 123 was not found";
+        final var expectedType = Fixture.CastMembers.type();
+        final var expectedErrorMessage = "CastMembers with ID 123 was not found";
         final var aCommand = UpdateCastMemberCommand.with(expectedId.getValue(), expectedName, expectedType);
 
         when(castMemberGateway.findById(any()))
