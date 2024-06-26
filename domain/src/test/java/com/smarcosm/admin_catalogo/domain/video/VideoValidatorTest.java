@@ -32,7 +32,7 @@ public class VideoValidatorTest {
         final var expectedGenres = Set.of(GenreID.unique());
         final var expectedMembers = Set.of(CastMemberID.unique());
         final var expectedErrorCount = 1;
-        final var expectedErrorMessage = "'name' should not be null";
+        final var expectedErrorMessage = "'title' should not be null";
 
         final var actualVideo = Video.newVideo(
                 expectedTitle,
@@ -48,7 +48,7 @@ public class VideoValidatorTest {
         );
         final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
         // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.vallidate());
+        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
 
         // then
         Assertions.assertEquals(expectedErrorCount, actualError.getErrors().size());
@@ -74,7 +74,7 @@ public class VideoValidatorTest {
         final var expectedGenres = Set.of(GenreID.unique());
         final var expectedMembers = Set.of(CastMemberID.unique());
         final var expectedErrorCount = 1;
-        final var expectedErrorMessage = "'name' should not be empty";
+        final var expectedErrorMessage = "'title' should not be empty";
 
         final var actualVideo = Video.newVideo(
                 expectedTitle,
@@ -90,7 +90,7 @@ public class VideoValidatorTest {
         );
         final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
         // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.vallidate());
+        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
 
         // then
 
@@ -104,6 +104,8 @@ public class VideoValidatorTest {
         //given
         final String expectedTitle = """
                 Disclaimer: o estudo de caso apresentado tem fins educacionais e representa nossas opiniões pessoais.
+                Esse video faz parte da Imersão Full Stack && Full Cycle.
+                Para acessar todas as aulas, lives e desafios, acesse:
                 Esse video faz parte da Imersão Full Stack && Full Cycle.
                 Para acessar todas as aulas, lives e desafios, acesse:
                 https://imersao.fullcycle.com.br/
@@ -123,7 +125,7 @@ public class VideoValidatorTest {
         final var expectedGenres = Set.of(GenreID.unique());
         final var expectedMembers = Set.of(CastMemberID.unique());
         final var expectedErrorCount = 1;
-        final var expectedErrorMessage = "'name' must be between 1 and 255 characters";
+        final var expectedErrorMessage = "'title' must be between 1 and 255 characters";
 
         final var actualVideo = Video.newVideo(
                 expectedTitle,
@@ -139,7 +141,7 @@ public class VideoValidatorTest {
         );
         final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
         // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.vallidate());
+        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
 
         // then
 
@@ -178,7 +180,7 @@ public class VideoValidatorTest {
         );
         final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
         // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.vallidate());
+        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
 
         // then
 
@@ -247,7 +249,7 @@ public class VideoValidatorTest {
         );
         final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
         // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.vallidate());
+        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
 
         // then
 
@@ -290,7 +292,7 @@ public class VideoValidatorTest {
         );
         final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
         // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.vallidate());
+        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
 
         // then
 
@@ -333,7 +335,7 @@ public class VideoValidatorTest {
         );
         final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
         // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.vallidate());
+        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
 
         // then
 
