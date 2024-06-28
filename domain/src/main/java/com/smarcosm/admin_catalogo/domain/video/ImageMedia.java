@@ -22,7 +22,7 @@ public class ImageMedia extends ValueObject {
         return checksum;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 

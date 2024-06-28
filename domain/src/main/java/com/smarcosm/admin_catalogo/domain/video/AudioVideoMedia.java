@@ -38,7 +38,7 @@ public class AudioVideoMedia extends ValueObject {
         return checksum;
     }
 
-    public String Name() {
+    public String name() {
         return name;
     }
 

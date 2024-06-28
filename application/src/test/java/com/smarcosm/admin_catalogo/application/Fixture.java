@@ -6,7 +6,9 @@ import com.smarcosm.admin_catalogo.domain.castmember.CastMemberType;
 import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.genre.Genre;
 import com.smarcosm.admin_catalogo.domain.video.Rating;
-import io.vavr.API;
+import com.smarcosm.admin_catalogo.domain.video.Resource;
+
+import java.util.Arrays;
 
 import static io.vavr.API.*;
 
@@ -48,7 +50,7 @@ public final class Fixture {
             return FAKER.options().option(CastMemberType.values());
         }
         public static CastMember wesley(){ return CastMember.with(WESLEY); }
-        public static CastMember sebastiao(){ return CastMember.with(WESLEY); }
+        public static CastMember sebastiao(){ return CastMember.with(SEBASTIAO); }
     }
     public static final class Genres {
         private static final Genre  TECH = Genre.newGenre("Technology", true);
@@ -57,16 +59,21 @@ public final class Fixture {
         }
     }
     public static final class Videos {
-        public static Rating rating() {
-            return FAKER.options().option(Rating.values());
+        public static String rating() {
+            final var values = Arrays.stream(Rating.values())
+                    .map(Rating::getName)
+                    .toList()
+                    .toArray(new String[0]);
+
+            return FAKER.options().option(values);
         }
-        public static Rating resource(final Resource.Type type) {
+        public static Resource resource(final Resource.Type type) {
             final String contentType = Match(type).of(
-                Case($(List(Type.VEDEO, Type.TRAILER)), "video/mp4"),
+                Case($(List(Resource.Type.VIDEO, Resource.Type.TRAILER)::contains), "video/mp4"),
                     Case($(), "image/jpg")
             );
             final byte[] content = "Conteudo".getBytes();
-            return Resource.of(content, contentType, type.name().toLowerCase(), type);
+            return Resource.with(content, contentType, type.name().toLowerCase(), type);
         }
 
         public static String description() {
