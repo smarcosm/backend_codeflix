@@ -1,11 +1,13 @@
 package com.smarcosm.admin_catalogo.application.video.create;
 
+import com.smarcosm.admin_catalogo.application.video.MediaResourceGateway;
 import com.smarcosm.admin_catalogo.domain.Identifier;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberGateway;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberID;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.domain.exception.DomainException;
+import com.smarcosm.admin_catalogo.domain.exception.InternalErrorException;
 import com.smarcosm.admin_catalogo.domain.exception.NotificationException;
 import com.smarcosm.admin_catalogo.domain.genre.GenreGateway;
 import com.smarcosm.admin_catalogo.domain.genre.GenreID;
@@ -29,18 +31,21 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase{
     private final CategoryGateway categoryGateway;
     private final GenreGateway genreGateway;
     private final CastMemberGateway castMemberGateway;
+    private final MediaResourceGateway mediaResourceGateway;
     private final VideoGateway videoGateway;
 
     public DefaultCreateVideoUseCase(
             final CategoryGateway categoryGateway,
             final GenreGateway genreGateway,
             final CastMemberGateway castMemberGateway,
+            final MediaResourceGateway mediaResourceGateway,
             final VideoGateway videoGateway
     )
     {
         this.categoryGateway = Objects.requireNonNull(categoryGateway);
         this.genreGateway = Objects.requireNonNull(genreGateway);
         this.castMemberGateway = Objects.requireNonNull(castMemberGateway);
+        this.mediaResourceGateway = Objects.requireNonNull(mediaResourceGateway);
         this.videoGateway = Objects.requireNonNull(videoGateway);
     }
 
@@ -77,7 +82,41 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase{
     }
 
     private Video create(final CreateVideoCommand aCommand, final Video aVideo) {
-        return this.videoGateway.create(aVideo);
+        final var anId = aVideo.getId();
+
+        try {
+            final var aVideoMedia = aCommand.getVideo()
+                    .map(it -> this.mediaResourceGateway.storeVideoMedia(anId, it))
+                    .orElse(null);
+
+            final var aTrailerMedia = aCommand.getTrailer()
+                    .map(it -> this.mediaResourceGateway.storeVideoMedia(anId, it))
+                    .orElse(null);
+
+            final var aBannerMedia = aCommand.getBanner()
+                    .map(it -> this.mediaResourceGateway.storeImage(anId, it))
+                    .orElse(null);
+
+            final var aThumbnailMedia = aCommand.getThumbnail()
+                    .map(it -> this.mediaResourceGateway.storeImage(anId, it))
+                    .orElse(null);
+
+            final var aThumbHalfMedia = aCommand.getThumbnailHalf()
+                    .map(it -> this.mediaResourceGateway.storeImage(anId, it))
+                    .orElse(null);
+
+            return this.videoGateway.create(
+                    aVideo.setVideo(aVideoMedia)
+                            .setTrailer(aTrailerMedia)
+                            .setBanner(aBannerMedia)
+                            .setThumbnail(aThumbnailMedia)
+                            .setThumbnailHalf(aThumbHalfMedia)
+            );
+
+        }catch (final Throwable t){
+            this.mediaResourceGateway.clearResources(anId);
+            throw InternalErrorException.with("An error on create video was observed [videoId:%s]".formatted(anId.getValue()), t);
+        }
     }
 
     private ValidationHandler validateCategories(final Set<CategoryID> ids){
@@ -115,7 +154,7 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase{
         return notification;
     }
     private Supplier<DomainException> invalidRating(final String rating) {
-        return () -> DomainException.with(new Error("Rating not found %".formatted(rating)));
+        return () -> DomainException.with(new Error("Rating not found %s".formatted(rating)));
     }
     private <T> Set<T> toIdentifier(final Set<String> ids, final Function<String, T> mapper){
         return ids.stream().map(mapper).collect(Collectors.toSet());

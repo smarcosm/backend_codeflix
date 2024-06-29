@@ -2,6 +2,7 @@ package com.smarcosm.admin_catalogo.application.video.create;
 
 import com.smarcosm.admin_catalogo.domain.video.Resource;
 
+import java.util.Optional;
 import java.util.Set;
 
 public record CreateVideoCommand (
@@ -60,4 +61,15 @@ public record CreateVideoCommand (
                  thumbnailHalf
         );
     }
+    public Optional<Resource> getVideo(){return Optional.ofNullable(video); }
+    public Optional<Resource> getTrailer(){
+        return Optional.ofNullable(trailer);
+    }
+    public Optional<Resource> getBanner(){
+        return Optional.ofNullable(banner);
+    }
+    public Optional<Resource> getThumbnail(){
+        return Optional.ofNullable(thumbnail);
+    }
+    public Optional<Resource> getThumbnailHalf(){return Optional.ofNullable(thumbnailHalf); }
 }
