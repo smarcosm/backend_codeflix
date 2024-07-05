@@ -46,10 +46,10 @@ public class VideoValidatorTest {
                 expectedGenres,
                 expectedMembers
         );
-        final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
-        // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
 
+        // when
+        final var actualError = Assertions.assertThrows(
+                DomainException.class, () -> actualVideo.validate(new ThrowsValidationHandler()));
         // then
         Assertions.assertEquals(expectedErrorCount, actualError.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, actualError.getErrors().get(0).message());
@@ -88,9 +88,10 @@ public class VideoValidatorTest {
                 expectedGenres,
                 expectedMembers
         );
-        final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
+
         // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
+        final var actualError = Assertions.assertThrows(
+                DomainException.class, () -> actualVideo.validate(new ThrowsValidationHandler()));
 
         // then
 
@@ -139,9 +140,9 @@ public class VideoValidatorTest {
                 expectedGenres,
                 expectedMembers
         );
-        final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
         // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
+        final var actualError = Assertions.assertThrows(
+                DomainException.class, () -> actualVideo.validate(new ThrowsValidationHandler()));
 
         // then
 
@@ -178,9 +179,10 @@ public class VideoValidatorTest {
                 expectedGenres,
                 expectedMembers
         );
-        final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
+        final var actualError = Assertions.assertThrows(
+                DomainException.class, () -> actualVideo.validate(new ThrowsValidationHandler()));
         // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
+
 
         // then
 
@@ -247,9 +249,10 @@ public class VideoValidatorTest {
                 expectedGenres,
                 expectedMembers
         );
-        final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
+
         // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
+        final var actualError = Assertions.assertThrows(
+                DomainException.class, () -> actualVideo.validate(new ThrowsValidationHandler()));
 
         // then
 
@@ -290,9 +293,9 @@ public class VideoValidatorTest {
                 expectedGenres,
                 expectedMembers
         );
-        final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
         // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
+        final var actualError = Assertions.assertThrows(
+                DomainException.class, () -> actualVideo.validate(new ThrowsValidationHandler()));
 
         // then
 
@@ -333,9 +336,9 @@ public class VideoValidatorTest {
                 expectedGenres,
                 expectedMembers
         );
-        final var validator = new VideoValidator(actualVideo, new ThrowsValidationHandler());
         // when
-        final var actualError = Assertions.assertThrows(DomainException.class, () -> validator.validate());
+        final var actualError = Assertions.assertThrows(
+                DomainException.class, () -> actualVideo.validate(new ThrowsValidationHandler()));
 
         // then
 

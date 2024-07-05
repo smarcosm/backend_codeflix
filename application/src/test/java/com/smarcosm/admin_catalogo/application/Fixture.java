@@ -8,8 +8,6 @@ import com.smarcosm.admin_catalogo.domain.genre.Genre;
 import com.smarcosm.admin_catalogo.domain.video.Rating;
 import com.smarcosm.admin_catalogo.domain.video.Resource;
 
-import java.util.Arrays;
-
 import static io.vavr.API.*;
 
 public final class Fixture {
@@ -59,13 +57,8 @@ public final class Fixture {
         }
     }
     public static final class Videos {
-        public static String rating() {
-            final var values = Arrays.stream(Rating.values())
-                    .map(Rating::getName)
-                    .toList()
-                    .toArray(new String[0]);
-
-            return FAKER.options().option(values);
+        public static Rating rating() {
+           return FAKER.options().option(Rating.values());
         }
         public static Resource resource(final Resource.Type type) {
             final String contentType = Match(type).of(

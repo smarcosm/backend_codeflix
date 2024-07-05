@@ -3,8 +3,6 @@ package com.smarcosm.admin_catalogo.domain.video;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class ImageMediaTest {
 
     @Test
@@ -20,7 +18,7 @@ public class ImageMediaTest {
         // then
         Assertions.assertNotNull(actualImage);
         Assertions.assertEquals(expectedChecksum, actualImage.getChecksum());
-        Assertions.assertEquals(expectedName, actualImage.getName());
+        Assertions.assertEquals(expectedName, actualImage.name());
         Assertions.assertEquals(expectedLocation, actualImage.getLocation());
     }
     @Test

@@ -3,8 +3,6 @@ package com.smarcosm.admin_catalogo.domain.video;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class AudioVideoMediaTest {
     @Test
     public void givenValidParams_whenCallsNewAudioVideo_ShouldReturnInstance() {
@@ -22,7 +20,7 @@ class AudioVideoMediaTest {
         // then
         Assertions.assertNotNull(actualVideo);
         Assertions.assertEquals(expectedChecksum, actualVideo.Checksum());
-        Assertions.assertEquals(expectedName, actualVideo.Name());
+        Assertions.assertEquals(expectedName, actualVideo.name());
         Assertions.assertEquals(expectedRawLocation, actualVideo.RawLocation());
         Assertions.assertEquals(expectedEncodeLocation, actualVideo.EncodedLocation());
         Assertions.assertEquals(expectedStatus, actualVideo.Status());
