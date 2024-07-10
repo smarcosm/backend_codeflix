@@ -2,7 +2,6 @@ package com.smarcosm.admin_catalogo.application.video.retrieve.get;
 
 import com.smarcosm.admin_catalogo.application.Fixture;
 import com.smarcosm.admin_catalogo.application.UseCaseTest;
-import com.smarcosm.admin_catalogo.application.video.create.CreateVideoCommand;
 import com.smarcosm.admin_catalogo.domain.exception.NotFoundException;
 import com.smarcosm.admin_catalogo.domain.video.*;
 import org.junit.jupiter.api.Assertions;
@@ -10,19 +9,18 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.io.NotActiveException;
 import java.time.Year;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class GetVideoByIdUseCaseTest extends UseCaseTest {
     @InjectMocks
-    private DefaultGetVideoByIdUseCaseTest useCase;
+    private DefaultGetVideoByIdUseCase useCase;
     @Mock
     private VideoGateway videoGateway;
     @Override
@@ -35,7 +33,7 @@ public class GetVideoByIdUseCaseTest extends UseCaseTest {
         // given
         final var expectedTitle = Fixture.title();
         final var expectedDescription = Fixture.Videos.description();
-        final var expectedLaunchedAt = Year.of(Fixture.year());
+        final var expectedLaunchedYear = Year.of(Fixture.year());
         final var expectedDuration = Fixture.duration();
         final var expectedOpened = Fixture.bool();
         final var expectedPublished = Fixture.bool();
@@ -55,7 +53,7 @@ public class GetVideoByIdUseCaseTest extends UseCaseTest {
         final var aVideo = Video.newVideo(
                 expectedTitle,
                 expectedDescription,
-                expectedLaunchedAt,
+                expectedLaunchedYear,
                 expectedDuration,
                 expectedOpened,
                 expectedPublished,
@@ -81,17 +79,17 @@ public class GetVideoByIdUseCaseTest extends UseCaseTest {
 
         // then
 
-        Assertions.assertEquals(expectedId, actualVide.id());
+        Assertions.assertEquals(expectedId.getValue(), actualVideo.id());
         Assertions.assertEquals(expectedTitle, actualVideo.title());
         Assertions.assertEquals(expectedDescription, actualVideo.description());
-        Assertions.assertEquals(expectedLaunchedAt, actualVideo.launchedAt());
+        Assertions.assertEquals(expectedLaunchedYear.getValue(), actualVideo.launchedAt());
         Assertions.assertEquals(expectedDuration, actualVideo.duration());
         Assertions.assertEquals(expectedOpened, actualVideo.opened());
         Assertions.assertEquals(expectedPublished, actualVideo.published());
         Assertions.assertEquals(expectedRating, actualVideo.rating());
-        Assertions.assertEquals((expectedCategories), actualVideo.categories());
-        Assertions.assertEquals((expectedGenres), actualVideo.genres());
-        Assertions.assertEquals((expectedMembers), actualVideo.castMembers());
+        Assertions.assertEquals(asString(expectedCategories), actualVideo.categories());
+        Assertions.assertEquals(asString(expectedGenres), actualVideo.genres());
+        Assertions.assertEquals(asString(expectedMembers), actualVideo.castMembers());
         Assertions.assertEquals(expectedVideo, actualVideo.video());
         Assertions.assertEquals(expectedTrailer, actualVideo.trailer());
         Assertions.assertEquals(expectedBanner, actualVideo.banner());
@@ -103,7 +101,7 @@ public class GetVideoByIdUseCaseTest extends UseCaseTest {
     @Test
     public void givenAnInvalidId_whenCallsGetVideo_shouldReturnNotFound(){
         // given
-        final var expectedErrorMessage = "Video with ID 123 not found";
+        final var expectedErrorMessage = "Video with ID 123 was not found";
         final var expectedId = VideoID.from("123");
 
         when(videoGateway.findById(any())).thenReturn(Optional.empty());
