@@ -3,7 +3,6 @@ package com.smarcosm.admin_catalogo.application.video.update;
 import com.smarcosm.admin_catalogo.application.Fixture;
 import com.smarcosm.admin_catalogo.application.UseCaseTest;
 import com.smarcosm.admin_catalogo.application.video.MediaResourceGateway;
-import com.smarcosm.admin_catalogo.application.video.create.CreateVideoCommand;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberGateway;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import com.smarcosm.admin_catalogo.domain.genre.GenreGateway;
@@ -41,9 +40,10 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         return List.of(videoGateway, categoryGateway, genreGateway, castMemberGateway, mediaResourceGateway);
     }
     @Test
-    public void givenAValidCommand_whenCallsCreateVideo_shouldReturnVideoId(){
+    public void givenAValidCommand_whenCallsUpdateVideo_shouldReturnVideoId(){
         // given
         final var aVideo = Fixture.Videos.systemDesign();
+
         final var expectedTitle = Fixture.title();
         final var expectedDescription = Fixture.Videos.description();
         final var expectedLaunchedAt = Year.of(Fixture.year());
@@ -63,7 +63,9 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final Resource expectedThumb = Fixture.Videos.resource(Resource.Type.THUMBNAIL);
         final Resource expectedThumbHalf = Fixture.Videos.resource(Resource.Type.THUMBNAIL_HALF);
 
+
         final var aCommand = UpdateVideoCommand.with(
+                aVideo.getId().getValue(),
                 expectedTitle,
                 expectedDescription,
                 expectedLaunchedAt.getValue(),
@@ -84,10 +86,10 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         when(categoryGateway.existsByIds(any())).thenReturn(new ArrayList<>(expectedCategories));
         when(castMemberGateway.existsByIds(any())).thenReturn(new ArrayList<>(expectedMembers));
         when(genreGateway.existsByIds(any())).thenReturn(new ArrayList<>(expectedGenres));
-        when(videoGateway.update(any())).thenAnswer(returnsFirstArg());
 
         mockAudioVideoMedia();
         mockImageMedia();
+        when(videoGateway.update(any())).thenAnswer(returnsFirstArg());
         // when
         final var actualResult = useCase.execute(aCommand);
 
@@ -113,7 +115,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
                         && Objects.equals(expectedThumb.name(),actualVideo.getThumbnail().get().name())
                         && Objects.equals(expectedThumbHalf.name(),actualVideo.getThumbnailHalf().get().name())
                         && Objects.equals(aVideo.getCreatedAt(), actualVideo.getCreatedAt())
-                        && aVideo.getUpdatedAt().isBefore(actualVideo.getCreatedAt())
+                        && aVideo.getUpdatedAt().isBefore(actualVideo.getUpdatedAt())
         ));
     }
     private void mockImageMedia(){

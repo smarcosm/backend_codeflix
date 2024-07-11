@@ -1,4 +1,4 @@
-package com.smarcosm.admin_catalogo.application.video.create;
+package com.smarcosm.admin_catalogo.application.video.update;
 
 import com.smarcosm.admin_catalogo.application.video.MediaResourceGateway;
 import com.smarcosm.admin_catalogo.domain.Identifier;
@@ -6,7 +6,9 @@ import com.smarcosm.admin_catalogo.domain.castmember.CastMemberGateway;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberID;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
+import com.smarcosm.admin_catalogo.domain.exception.DomainException;
 import com.smarcosm.admin_catalogo.domain.exception.InternalErrorException;
+import com.smarcosm.admin_catalogo.domain.exception.NotFoundException;
 import com.smarcosm.admin_catalogo.domain.exception.NotificationException;
 import com.smarcosm.admin_catalogo.domain.genre.GenreGateway;
 import com.smarcosm.admin_catalogo.domain.genre.GenreID;
@@ -16,6 +18,7 @@ import com.smarcosm.admin_catalogo.domain.validation.handler.Notification;
 import com.smarcosm.admin_catalogo.domain.video.Rating;
 import com.smarcosm.admin_catalogo.domain.video.Video;
 import com.smarcosm.admin_catalogo.domain.video.VideoGateway;
+import com.smarcosm.admin_catalogo.domain.video.VideoID;
 
 import java.time.Year;
 import java.util.ArrayList;
@@ -23,16 +26,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class DefaultCreateVideoUseCase extends CreateVideoUseCase{
+public class DefaultUpdateVideoUseCase extends UpdateVideoUseCase{
     private final CategoryGateway categoryGateway;
     private final GenreGateway genreGateway;
     private final CastMemberGateway castMemberGateway;
     private final MediaResourceGateway mediaResourceGateway;
     private final VideoGateway videoGateway;
 
-    public DefaultCreateVideoUseCase(
+    public DefaultUpdateVideoUseCase(
             final CategoryGateway categoryGateway,
             final GenreGateway genreGateway,
             final CastMemberGateway castMemberGateway,
@@ -46,21 +50,22 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase{
         this.mediaResourceGateway = Objects.requireNonNull(mediaResourceGateway);
         this.videoGateway = Objects.requireNonNull(videoGateway);
     }
-
     @Override
-    public CreateVideoOutput execute(final CreateVideoCommand aCommand) {
+    public UpdateVideoOutput execute(final UpdateVideoCommand aCommand) {
+        final var anId = VideoID.from(aCommand.id());
         final var aRating = Rating.of(aCommand.rating()).orElse(null);
         final var aLaunchYear = aCommand.launchedAt() != null ? Year.of(aCommand.launchedAt()) :  null;
         final var categories = toIdentifier(aCommand.categories(), CategoryID::from);
         final var genres = toIdentifier(aCommand.genres(), GenreID::from);
         final var members = toIdentifier(aCommand.members(), CastMemberID::from);
 
+        final var aVideo = this.videoGateway.findById(anId).orElseThrow(notFoundException(anId));
         final var notification = Notification.create();
         notification.append(validateCategories(categories));
         notification.append(validateGenres(genres));
         notification.append(validateMembers(members));
 
-        final var aVideo = Video.newVideo(
+        aVideo.update(
                 aCommand.title(),
                 aCommand.description(),
                 aLaunchYear,
@@ -71,16 +76,17 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase{
                 categories,
                 genres,
                 members
+
         );
         aVideo.validate(notification);
 
         if (notification.hasError()){
-            throw new NotificationException("Could not create Aggregate Video", notification);
+            throw new NotificationException("Could not update Aggregate Video", notification);
         }
-        return CreateVideoOutput.from(create(aCommand, aVideo));
+        return UpdateVideoOutput.from(update(aCommand, aVideo));
     }
 
-    private Video create(final CreateVideoCommand aCommand, final Video aVideo) {
+    private Video update(final UpdateVideoCommand aCommand, final Video aVideo) {
         final var anId = aVideo.getId();
 
         try {
@@ -104,7 +110,7 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase{
                     .map(it -> this.mediaResourceGateway.storeImage(anId, it))
                     .orElse(null);
 
-            return this.videoGateway.create(
+            return this.videoGateway.update(
                     aVideo.setVideo(aVideoMedia)
                             .setTrailer(aTrailerMedia)
                             .setBanner(aBannerMedia)
@@ -113,17 +119,18 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase{
             );
 
         }catch (final Throwable t){
-            this.mediaResourceGateway.clearResources(anId);
-            throw InternalErrorException.with("An error on create video was observed [videoId:%s]".formatted(anId.getValue()), t);
+            throw InternalErrorException.with("An error on update video was observed [videoId:%s]".formatted(anId.getValue()), t);
         }
     }
-
+    private Supplier<DomainException> notFoundException(final VideoID anId){
+        return ()-> NotFoundException.with(Video.class, anId);
+    }
     private ValidationHandler validateCategories(final Set<CategoryID> ids){
 
-    return validateAggregate("categories", ids, categoryGateway::existsByIds);
+        return validateAggregate("categories", ids, categoryGateway::existsByIds);
     }
     private ValidationHandler validateGenres(final Set<GenreID> ids){
-    return validateAggregate("genres", ids, genreGateway::existsByIds);
+        return validateAggregate("genres", ids, genreGateway::existsByIds);
     }
     private ValidationHandler validateMembers(final Set<CastMemberID> ids){
         return validateAggregate("cast members", ids, castMemberGateway::existsByIds);
