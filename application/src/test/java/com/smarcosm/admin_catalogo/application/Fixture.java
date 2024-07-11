@@ -7,6 +7,10 @@ import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.genre.Genre;
 import com.smarcosm.admin_catalogo.domain.video.Rating;
 import com.smarcosm.admin_catalogo.domain.video.Resource;
+import com.smarcosm.admin_catalogo.domain.video.Video;
+
+import java.time.Year;
+import java.util.Set;
 
 import static io.vavr.API.*;
 
@@ -57,6 +61,21 @@ public final class Fixture {
         }
     }
     public static final class Videos {
+        public static Video systemDesign(){
+            return Video.newVideo(
+                 Fixture.title(),
+                 description(),
+                 Year.of(Fixture.year()),
+                 Fixture.duration(),
+                 Fixture.bool(),
+                 Fixture.bool(),
+                 rating(),
+                 Set.of(Categories.aulas().getId()),
+                 Set.of(Genres.tech().getId()),
+                 Set.of(CastMembers.sebastiao().getId())
+
+            );
+        }
         public static Rating rating() {
            return FAKER.options().option(Rating.values());
         }
