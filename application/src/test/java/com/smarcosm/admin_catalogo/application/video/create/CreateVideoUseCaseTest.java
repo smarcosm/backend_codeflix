@@ -446,7 +446,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
 
         verify(categoryGateway, times(0)).existsByIds(any());
         verify(castMemberGateway, times(0)).existsByIds(any());
-        verify(mediaResourceGateway, times(0)).storeVideoMedia(any(), any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
         verify(mediaResourceGateway, times(0)).storeImage(any(), any());
         verify(genreGateway, times(0)).existsByIds(any());
         verify(videoGateway, times(0)).create(any());
@@ -502,7 +502,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
 
         verify(categoryGateway, times(0)).existsByIds(any());
         verify(castMemberGateway, times(0)).existsByIds(any());
-        verify(mediaResourceGateway, times(0)).storeVideoMedia(any(), any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
         verify(mediaResourceGateway, times(0)).storeImage(any(), any());
         verify(genreGateway, times(0)).existsByIds(any());
         verify(videoGateway, times(0)).create(any());
@@ -558,7 +558,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
 
         verify(categoryGateway, times(0)).existsByIds(any());
         verify(castMemberGateway, times(0)).existsByIds(any());
-        verify(mediaResourceGateway, times(0)).storeVideoMedia(any(), any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
         verify(mediaResourceGateway, times(0)).storeImage(any(), any());
         verify(genreGateway, times(0)).existsByIds(any());
         verify(videoGateway, times(0)).create(any());
@@ -614,7 +614,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
 
         verify(categoryGateway, times(0)).existsByIds(any());
         verify(castMemberGateway, times(0)).existsByIds(any());
-        verify(mediaResourceGateway, times(0)).storeVideoMedia(any(), any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
         verify(mediaResourceGateway, times(0)).storeImage(any(), any());
         verify(genreGateway, times(0)).existsByIds(any());
         verify(videoGateway, times(0)).create(any());
@@ -670,7 +670,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
 
         verify(categoryGateway, times(0)).existsByIds(any());
         verify(castMemberGateway, times(0)).existsByIds(any());
-        verify(mediaResourceGateway, times(0)).storeVideoMedia(any(), any());
+        verify(mediaResourceGateway, times(0)).storeAudioVideo(any(), any());
         verify(mediaResourceGateway, times(0)).storeImage(any(), any());
         verify(genreGateway, times(0)).existsByIds(any());
         verify(videoGateway, times(0)).create(any());
@@ -927,7 +927,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         });
     }
    private void mockAudioVideoMedia(){
-       when(mediaResourceGateway.storeVideoMedia(any(), any())).thenAnswer(t -> {
+       when(mediaResourceGateway.storeAudioVideo(any(), any())).thenAnswer(t -> {
            final var resource = t.getArgument(1, Resource.class);
            return AudioVideoMedia.with(UUID.randomUUID().toString(), resource.name(), "/mp4", "", MediaStatus.PENDING);
        });
