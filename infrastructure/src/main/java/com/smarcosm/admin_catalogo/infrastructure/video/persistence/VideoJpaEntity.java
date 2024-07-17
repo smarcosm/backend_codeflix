@@ -1,6 +1,7 @@
 package com.smarcosm.admin_catalogo.infrastructure.video.persistence;
 
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
+import com.smarcosm.admin_catalogo.domain.genre.GenreID;
 import com.smarcosm.admin_catalogo.domain.video.Rating;
 import com.smarcosm.admin_catalogo.domain.video.Video;
 import com.smarcosm.admin_catalogo.domain.video.VideoID;
@@ -55,8 +56,11 @@ public class VideoJpaEntity {
     private ImageMediaJpaEntity thumbnailHalf;
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<VideoCategoryJpaEntity> categories;
+    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<VideoGenreJpaEntity> genres;
     public VideoJpaEntity() {
         this.categories = new HashSet<>(3);
+        this.genres = new HashSet<>(2);
     }
 
     private VideoJpaEntity(
@@ -93,7 +97,7 @@ public class VideoJpaEntity {
         this.thumbnail = thumbnail;
         this.thumbnailHalf = thumbnailHalf;
         this.categories = new HashSet<>(3);
-
+        this.genres = new HashSet<>(2);
     }
 
 
@@ -116,6 +120,7 @@ public class VideoJpaEntity {
                 aVideo.getThumbnailHalf().map(ImageMediaJpaEntity::from).orElse(null)
         );
        aVideo.getCategories().forEach(entity::addCategory);
+       aVideo.getGenres().forEach(entity::addGenre);
         return entity;
     }
 
@@ -137,13 +142,13 @@ public class VideoJpaEntity {
                 Optional.ofNullable(getTrailer()).map(AudioVideoMediaJpaEntity::toDomain).orElse(null),
                 Optional.ofNullable(getVideo()).map(AudioVideoMediaJpaEntity::toDomain).orElse(null),
                 getCategories().stream().map(it -> CategoryID.from(it.getId().getCategoryId())).collect(Collectors.toSet()),
-                null,
+                getGenres().stream().map(it -> GenreID.from(it.getId().getGenreId())).collect(Collectors.toSet()),
                 null
 
         );
     }
-    public void addCategory(final CategoryID anId){ this.categories.add(VideoCategoryJpaEntity.from(this, anId));
-    }
+    public void addCategory(final CategoryID anId){ this.categories.add(VideoCategoryJpaEntity.from(this, anId));}
+    public void addGenre(final GenreID anId){ this.genres.add(VideoGenreJpaEntity.from(this, anId)); }
     public UUID getId() {
         return id;
     }
@@ -270,5 +275,13 @@ public class VideoJpaEntity {
 
     public void setCategories(Set<VideoCategoryJpaEntity> categories) {
         this.categories = categories;
+    }
+
+    public Set<VideoGenreJpaEntity> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Set<VideoGenreJpaEntity> genres) {
+        this.genres = genres;
     }
 }
