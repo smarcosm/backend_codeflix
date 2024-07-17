@@ -250,4 +250,43 @@ public class Video extends AggregateRoot<VideoID> {
     private void setCastMembers(final Set<CastMemberID> castMembers) {
         this.castMembers = castMembers != null ? new HashSet<>(castMembers) : Collections.emptySet();
     }
+    public static Video with(final VideoID anId,
+                             final String aTitle,
+                             final String aDescription,
+                             final Year aLaunchYear,
+                             final double aDuration,
+                             final boolean wasOpened,
+                             final boolean wasPublished,
+                             final Rating aRating,
+                             final Instant aCreationDate,
+                             final Instant aUpdateDate,
+                             final ImageMedia aBanner,
+                             final ImageMedia aThumb,
+                             final ImageMedia aThumbHalf,
+                             final AudioVideoMedia aTrailer,
+                             final AudioVideoMedia aVideo,
+                             final Set<CategoryID> categories,
+                             final Set<GenreID> genres,
+                             final Set<CastMemberID> members) {
+        return new Video(
+                anId,
+                aTitle,
+                aDescription,
+                aLaunchYear,
+                aDuration,
+                wasOpened,
+                wasPublished,
+                aRating,
+                aCreationDate,
+                aUpdateDate,
+                null,
+                null,
+                null,
+                null,
+                null,
+                categories,
+                genres,
+                members
+        );
+    }
 }
