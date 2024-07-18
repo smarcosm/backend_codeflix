@@ -1,26 +1,23 @@
 package com.smarcosm.admin_catalogo.domain.castmember;
 
 import com.smarcosm.admin_catalogo.domain.Identifier;
+import com.smarcosm.admin_catalogo.domain.utils.IdUtils;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class CastMemberID extends Identifier {
     private final String value;
 
     private CastMemberID(final String anId) {
-        Objects.requireNonNull(anId);
-        this.value = anId;
+        this.value = Objects.requireNonNull(anId);;
     }
     public static CastMemberID unique(){
-        return CastMemberID.from(UUID.randomUUID());
+        return CastMemberID.from(IdUtils.uuid());
     }
     public static CastMemberID from(final String anId){
         return new CastMemberID(anId);
     }
-    public static CastMemberID from(final UUID anId) {
-        return new CastMemberID(anId.toString().toLowerCase());
-    }
+
     @Override
     public String getValue() {
         return value;

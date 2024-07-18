@@ -1,9 +1,9 @@
 package com.smarcosm.admin_catalogo.domain.video;
 
 import com.smarcosm.admin_catalogo.domain.Identifier;
+import com.smarcosm.admin_catalogo.domain.utils.IdUtils;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class VideoID extends Identifier {
     private final String value;
@@ -12,16 +12,12 @@ public class VideoID extends Identifier {
         Objects.requireNonNull(value);
         this.value = value;
     }
-    public static VideoID from(final String anId) {
-        return new VideoID(anId.toString().toLowerCase());
-    }
-    public static VideoID from(final UUID anId){
-        return new VideoID(anId.toString());
-    }
     public static VideoID unique(){
-        return VideoID.from(UUID.randomUUID());
+        return VideoID.from(IdUtils.uuid());
     }
-
+    public static VideoID from(final String anId) {
+        return new VideoID(anId);
+    }
     @Override
     public String getValue() {
         return value;

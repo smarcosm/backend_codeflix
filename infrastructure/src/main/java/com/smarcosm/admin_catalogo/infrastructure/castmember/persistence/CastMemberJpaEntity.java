@@ -11,6 +11,7 @@ import java.time.Instant;
 @Table(name = "cast_members")
 public class CastMemberJpaEntity {
     @Id
+    @Column(name = "id", nullable = false)
     private String id;
     @Column(name = "name", nullable = false)
     private String name;

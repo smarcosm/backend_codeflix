@@ -1,28 +1,23 @@
 package com.smarcosm.admin_catalogo.domain.genre;
 
 import com.smarcosm.admin_catalogo.domain.Identifier;
+import com.smarcosm.admin_catalogo.domain.utils.IdUtils;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class GenreID extends Identifier {
     private final String value;
 
     private GenreID(final String value) {
-        Objects.requireNonNull(value);
-        this.value = value;
+        this.value = Objects.requireNonNull(value);
     }
 
     public static GenreID unique() {
-        return GenreID.from(UUID.randomUUID());
+        return GenreID.from(IdUtils.uuid());
     }
 
     public static GenreID from(final String anId) {
         return new GenreID(anId);
-    }
-
-    public static GenreID from(final UUID anId) {
-        return new GenreID(anId.toString().toLowerCase());
     }
 
     @Override

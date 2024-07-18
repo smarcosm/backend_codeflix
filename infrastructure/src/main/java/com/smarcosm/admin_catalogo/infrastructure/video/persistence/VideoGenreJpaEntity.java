@@ -3,10 +3,8 @@ package com.smarcosm.admin_catalogo.infrastructure.video.persistence;
 import com.smarcosm.admin_catalogo.domain.genre.GenreID;
 import jakarta.persistence.*;
 
-import java.util.UUID;
-
-@Entity(name = "VideoGenre")
 @Table(name = "videos_genres")
+@Entity(name = "VideoGenre")
 public class VideoGenreJpaEntity {
     @EmbeddedId
     private VideoGenreID id;
@@ -23,7 +21,7 @@ public class VideoGenreJpaEntity {
     }
     public static VideoGenreJpaEntity from(final VideoJpaEntity video, final GenreID genres) {
         return new VideoGenreJpaEntity(
-                VideoGenreID.from(video.getId(), UUID.fromString(genres.getValue())),
+                VideoGenreID.from(video.getId(), genres.getValue()),
                 video
         );
     }

@@ -3,8 +3,6 @@ package com.smarcosm.admin_catalogo.infrastructure.video.persistence;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberID;
 import jakarta.persistence.*;
 
-import java.util.UUID;
-
 @Entity(name = "VideoCastMember")
 @Table(name = "videos_cast_members")
 public class VideoCastMemberJpaEntity {
@@ -23,7 +21,7 @@ public class VideoCastMemberJpaEntity {
     }
     public static VideoCastMemberJpaEntity from(final VideoJpaEntity video, final CastMemberID castMembers) {
         return new VideoCastMemberJpaEntity(
-                VideoCastMemberID.from(video.getId(), UUID.fromString(castMembers.getValue())), video
+                VideoCastMemberID.from(video.getId(), castMembers.getValue()), video
         );
     }
     public VideoCastMemberID getId() {

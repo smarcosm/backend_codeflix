@@ -12,6 +12,7 @@ import com.smarcosm.admin_catalogo.domain.exception.InternalErrorException;
 import com.smarcosm.admin_catalogo.domain.exception.NotificationException;
 import com.smarcosm.admin_catalogo.domain.genre.GenreGateway;
 import com.smarcosm.admin_catalogo.domain.genre.GenreID;
+import com.smarcosm.admin_catalogo.domain.utils.IdUtils;
 import com.smarcosm.admin_catalogo.domain.video.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -1111,7 +1112,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
     private void mockImageMedia() {
         when(mediaResourceGateway.storeImage(any(), any())).thenAnswer(t -> {
             final var resource = t.getArgument(1, Resource.class);
-            return ImageMedia.with(UUID.randomUUID().toString(), resource.name(), "/img");
+            return ImageMedia.with(IdUtils.uuid(), resource.name(), "/img");
         });
     }
 
@@ -1119,7 +1120,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         when(mediaResourceGateway.storeAudioVideo(any(), any())).thenAnswer(t -> {
             final var resource = t.getArgument(1, Resource.class);
             return AudioVideoMedia.with(
-                    UUID.randomUUID().toString(),
+                    IdUtils.uuid(),
                     resource.name(),
                     "/img",
                     "",
