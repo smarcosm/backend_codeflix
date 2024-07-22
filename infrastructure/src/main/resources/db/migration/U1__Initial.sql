@@ -1,2 +1,2 @@
 
-DROP CREATE TABLE category;
+DROP CREATE TABLE categories;

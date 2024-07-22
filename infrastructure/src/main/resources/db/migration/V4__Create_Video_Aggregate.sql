@@ -20,7 +20,7 @@ CREATE TABLE videos (
     title VARCHAR(255) NOT NULL,
     description VARCHAR(1000) NOT NULL,
     year_launched SMALLINT NOT NULL,
-     opened BOOLEAN NOT NULL DEFAULT FALSE,
+ opened BOOLEAN NOT NULL DEFAULT FALSE,
         published BOOLEAN NOT NULL DEFAULT FALSE,
         rating VARCHAR(5),
         duration DECIMAL(5, 2) NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE videos (
         category_id CHAR(32) NOT NULL,
         CONSTRAINT idx_vcs_video_category UNIQUE (video_id, category_id),
         CONSTRAINT fk_vcs_video_id FOREIGN KEY (video_id) REFERENCES videos (id),
-        CONSTRAINT fk_vcs_category_id FOREIGN KEY (category_id) REFERENCES category (id)
+        CONSTRAINT fk_vcs_category_id FOREIGN KEY (category_id) REFERENCES categories (id)
     );
 
     CREATE TABLE videos_genres (
