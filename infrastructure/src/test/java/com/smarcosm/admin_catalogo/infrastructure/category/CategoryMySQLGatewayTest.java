@@ -1,15 +1,17 @@
 package com.smarcosm.admin_catalogo.infrastructure.category;
 
+import com.smarcosm.admin_catalogo.MySQLGatewayTest;
 import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
-import com.smarcosm.admin_catalogo.MySQLGatewayTest;
 import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryJpaEntity;
 import com.smarcosm.admin_catalogo.infrastructure.category.persitence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @MySQLGatewayTest
@@ -297,34 +299,36 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(filmes.getId(), actualResult.items().get(0).getId());
     }
     @Test
-    public void givenPrePersistedCategories_whenCallsExistsByIds_shouldReturnIds(){
+    public void givenPrePersistedCategories_whenCallsExistsByIds_shouldReturnIds() {
         // given
-        final var expectedPage = 0 ;
+        final var expectedPage = 0;
         final var expectedPerPage = 1;
         final var expectedTotal = 1;
-
         final var filmes = Category.newCategory("Filmes", "A categoria mais assistida", true);
         final var series = Category.newCategory("Séries", "Uma categoria assistida", true);
         final var documentarios = Category.newCategory("Documentários", "A categoria menos assistida", true);
 
         Assertions.assertEquals(0, categoryRepository.count());
-
         categoryRepository.saveAll(List.of(
                 CategoryJpaEntity.from(filmes),
                 CategoryJpaEntity.from(series),
                 CategoryJpaEntity.from(documentarios)
         ));
-
         Assertions.assertEquals(3, categoryRepository.count());
 
-        final var expectedIds = List.of(filmes.getId(), series.getId());
-
+        final var expectedIds = new ArrayList<>(List.of(filmes.getId(), series.getId()));
         final var ids = List.of(filmes.getId(), series.getId(), CategoryID.from("123"));
+
         // when
-        final var actualResult = categoryGateway.existsByIds(ids);
+        final var actualResult = new ArrayList<>(categoryGateway.existsByIds(ids));
 
+        // Ordenar as listas antes de comparar
+        expectedIds.sort(Comparator.naturalOrder());
+        actualResult.sort(Comparator.naturalOrder());
+
+        // then
         Assertions.assertEquals(expectedIds, actualResult);
-
     }
+
 
 }
