@@ -1,7 +1,7 @@
 package com.smarcosm.admin_catalogo.application.castmember.create;
 
-import com.smarcosm.admin_catalogo.application.Fixture;
 import com.smarcosm.admin_catalogo.application.UseCaseTest;
+import com.smarcosm.admin_catalogo.domain.Fixture;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberGateway;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberType;
 import com.smarcosm.admin_catalogo.domain.exception.NotificationException;

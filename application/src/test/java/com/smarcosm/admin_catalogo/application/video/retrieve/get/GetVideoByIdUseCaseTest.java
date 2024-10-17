@@ -1,7 +1,7 @@
 package com.smarcosm.admin_catalogo.application.video.retrieve.get;
 
-import com.smarcosm.admin_catalogo.application.Fixture;
 import com.smarcosm.admin_catalogo.application.UseCaseTest;
+import com.smarcosm.admin_catalogo.domain.Fixture;
 import com.smarcosm.admin_catalogo.domain.exception.NotFoundException;
 import com.smarcosm.admin_catalogo.domain.utils.IdUtils;
 import com.smarcosm.admin_catalogo.domain.video.*;

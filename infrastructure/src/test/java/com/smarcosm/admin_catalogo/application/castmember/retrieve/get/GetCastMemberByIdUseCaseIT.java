@@ -1,6 +1,6 @@
 package com.smarcosm.admin_catalogo.application.castmember.retrieve.get;
 
-import com.smarcosm.admin_catalogo.Fixture;
+import com.smarcosm.admin_catalogo.domain.Fixture;
 import com.smarcosm.admin_catalogo.IntegrationTest;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMember;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberGateway;
@@ -30,7 +30,7 @@ public class GetCastMemberByIdUseCaseIT {
     public void givenAValidId_whenCallsGetCastMember_shouldReturnIt() {
         // given
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var aMember = CastMember.newMember(expectedName, expectedType);
 

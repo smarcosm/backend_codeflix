@@ -1,9 +1,7 @@
 package com.smarcosm.admin_catalogo.application.castmember.create;
 
-import com.smarcosm.admin_catalogo.Fixture;
+import com.smarcosm.admin_catalogo.domain.Fixture;
 import com.smarcosm.admin_catalogo.IntegrationTest;
-import com.smarcosm.admin_catalogo.application.castmember.create.CreateCastMemberCommand;
-import com.smarcosm.admin_catalogo.application.castmember.create.CreateCastMemberUseCase;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberGateway;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberType;
 import com.smarcosm.admin_catalogo.domain.exception.NotificationException;
@@ -21,8 +19,10 @@ import static org.mockito.Mockito.verify;
 public class CreateCastMemberUseCaseIT {
     @Autowired
     private CreateCastMemberUseCase useCase;
+
     @Autowired
     private CastMemberRepository castMemberRepository;
+
     @SpyBean
     private CastMemberGateway castMemberGateway;
 
@@ -30,8 +30,7 @@ public class CreateCastMemberUseCaseIT {
     public void givenAValidCommand_whenCallsCreateCastMember_shouldReturnIt() {
         // given
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
-
+        final var expectedType = Fixture.CastMembers.type();
         final var aCommand = CreateCastMemberCommand.with(expectedName, expectedType);
 
         // when
@@ -41,20 +40,20 @@ public class CreateCastMemberUseCaseIT {
         Assertions.assertNotNull(actualOutput);
         Assertions.assertNotNull(actualOutput.id());
         final var actualMember = this.castMemberRepository.findById(actualOutput.id()).get();
-
         Assertions.assertEquals(expectedName, actualMember.getName());
         Assertions.assertEquals(expectedType, actualMember.getType());
         Assertions.assertNotNull(actualMember.getCreatedAt());
         Assertions.assertNotNull(actualMember.getUpdatedAt());
         Assertions.assertEquals(actualMember.getCreatedAt(), actualMember.getUpdatedAt());
-
         verify(castMemberGateway).create(any());
     }
+
+
     @Test
     public void givenAInvalidName_whenCallsCreateCastMember_shouldThrowsNotificationException() {
         // given
         final String expectedName = null;
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'name' should not be null";
 

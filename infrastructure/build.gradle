@@ -29,11 +29,10 @@ repositories {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":application"))
-
+    testImplementation(project(path: ':domain', configuration: 'testClasses'))
 
     implementation('mysql:mysql-connector-java:8.0.33')
     implementation 'io.vavr:vavr:0.10.4'
-
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.0.4'
 
     implementation('org.springframework.boot:spring-boot-starter-web:3.1.0') {
@@ -46,7 +45,7 @@ dependencies {
     testImplementation('org.testcontainers:testcontainers:1.17.6')
     testImplementation('org.testcontainers:mysql:1.17.6')
     testImplementation('org.testcontainers:junit-jupiter:1.17.6')
-    testImplementation('com.github.javafaker:javafaker:1.0.2')
+
     testImplementation('org.flywaydb:flyway-core:9.16.0')
     testImplementation('org.flywaydb:flyway-mysql:9.16.0')
 

@@ -1,6 +1,6 @@
 package com.smarcosm.admin_catalogo.infrastructure.castmember.models;
 
-import com.smarcosm.admin_catalogo.Fixture;
+import com.smarcosm.admin_catalogo.domain.Fixture;
 import com.smarcosm.admin_catalogo.JacksonTest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ class UpdateCastMemberRequestTest {
     @Test
     public void testUnMarshall() throws Exception {
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var json = """
                 {

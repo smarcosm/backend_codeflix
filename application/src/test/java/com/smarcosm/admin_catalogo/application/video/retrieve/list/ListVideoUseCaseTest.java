@@ -1,11 +1,11 @@
 package com.smarcosm.admin_catalogo.application.video.retrieve.list;
 
-import com.smarcosm.admin_catalogo.application.Fixture;
 import com.smarcosm.admin_catalogo.application.UseCaseTest;
 import com.smarcosm.admin_catalogo.application.genre.retrieve.list.GenreListOutput;
+import com.smarcosm.admin_catalogo.domain.Fixture;
 import com.smarcosm.admin_catalogo.domain.pagination.Pagination;
-import com.smarcosm.admin_catalogo.domain.video.Video;
 import com.smarcosm.admin_catalogo.domain.video.VideoGateway;
+import com.smarcosm.admin_catalogo.domain.video.VideoPreview;
 import com.smarcosm.admin_catalogo.domain.video.VideoSearchQuery;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -33,7 +34,8 @@ public class ListVideoUseCaseTest extends UseCaseTest {
     @Test
     public void givenAValidQuery_whenCallsListVideo_shouldReturnVideo() {
         // given
-        final var videos = List.of(Fixture.video(), Fixture.video());
+        final var videos = List.of(
+                new VideoPreview(Fixture.video()), new VideoPreview(Fixture.video()));
 
         final var expectedPage = 0;
         final var expectedPerPage = 10;
@@ -48,7 +50,9 @@ public class ListVideoUseCaseTest extends UseCaseTest {
 
         when(videoGateway.findAll(any())).thenReturn(expectedPagination);
 
-        final var aQuery = new VideoSearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirect);
+        final var aQuery = new VideoSearchQuery(
+                expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirect, Set.of(), Set.of(), Set.of()
+        );
 
         //when
         final var actualOutput = useCase.execute(aQuery);
@@ -65,7 +69,7 @@ public class ListVideoUseCaseTest extends UseCaseTest {
     @Test
     public void givenAValidQuery_whenCallsListVideoAndResultIsEmpty_thenShouldReturnEmptyVideo() {
         //given
-        final var videos = List.<Video>of();
+        final var videos = List.<VideoPreview>of();
         final var expectedPage = 0;
         final var expectedPerPage = 10;
         final var expectedTerms = "A";
@@ -79,7 +83,9 @@ public class ListVideoUseCaseTest extends UseCaseTest {
 
         when(videoGateway.findAll(any())).thenReturn(expectedPagination);
 
-        final var aQuery = new VideoSearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirect);
+        final var aQuery = new VideoSearchQuery(
+                expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirect, Set.of(), Set.of(), Set.of()
+        );
 
         //when
         final var actualOutput = useCase.execute(aQuery);
@@ -103,7 +109,9 @@ public class ListVideoUseCaseTest extends UseCaseTest {
         final var expectedDirect = "asc";
         final var expectedErrorMessage = "Gateway error";
 
-        final var aQuery = new VideoSearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirect);
+        final var aQuery = new VideoSearchQuery(
+                expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirect, Set.of(), Set.of(), Set.of()
+        );
 
         when(videoGateway.findAll(Mockito.eq(aQuery)))
                 .thenThrow(new IllegalStateException(expectedErrorMessage));

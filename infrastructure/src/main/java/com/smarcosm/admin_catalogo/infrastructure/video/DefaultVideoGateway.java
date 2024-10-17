@@ -12,8 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+import static com.smarcosm.admin_catalogo.domain.utils.CollectionsUtils.mapTo;
+import static com.smarcosm.admin_catalogo.domain.utils.CollectionsUtils.nullIfEmpty;
 
 public class DefaultVideoGateway implements VideoGateway {
     private final VideoRepository videoRepository;
@@ -53,12 +54,11 @@ public class DefaultVideoGateway implements VideoGateway {
 
         final var actualPage = this.videoRepository.findAll(
                 SqlUtils.like(aQuery.terms()),
-                toString(aQuery.castMembers()),
-                toString(aQuery.categories()),
-                toString(aQuery.genres()),
+                nullIfEmpty(mapTo(aQuery.castMembers(), Identifier::getValue)),
+                nullIfEmpty(mapTo(aQuery.categories(), Identifier::getValue)),
+                nullIfEmpty(mapTo(aQuery.genres(), Identifier::getValue)),
                 page
         );
-
         return new Pagination<>(
                 actualPage.getNumber(),
                 actualPage.getSize(),
@@ -67,15 +67,7 @@ public class DefaultVideoGateway implements VideoGateway {
         );
 
     }
-    private Set<String> toString(final Set<? extends Identifier> ids) {
-        if (ids == null || ids.isEmpty()) {
-            return null;
-        }
 
-        return ids.stream()
-                .map(Identifier::getValue)
-                .collect(Collectors.toSet());
-    }
     @Override
     @Transactional
     public Video update(Video aVideo) {
