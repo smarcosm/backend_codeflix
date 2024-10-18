@@ -3,19 +3,20 @@ package com.smarcosm.admin_catalogo.domain.video;
 import com.smarcosm.admin_catalogo.domain.ValueObject;
 
 import java.util.Objects;
-
 public class Resource extends ValueObject {
+
     private final byte[] content;
     private final String contentType;
     private final String name;
     private final Type type;
 
-    public Resource(final byte[] content, final String contentType, final String name, final Type type) {
-        this.content = Objects.requireNonNull( content);
-        this.contentType = Objects.requireNonNull( contentType);
-        this.name = Objects.requireNonNull( name);
-        this.type = Objects.requireNonNull( type);
+    private Resource(final byte[] content, final String contentType, final String name, final Type type) {
+        this.content = Objects.requireNonNull(content);
+        this.contentType = Objects.requireNonNull(contentType);
+        this.name = Objects.requireNonNull(name);
+        this.type = Objects.requireNonNull(type);
     }
+
     public static Resource with(final byte[] content, final String contentType, final String name, final Type type) {
         return new Resource(content, contentType, name, type);
     }
@@ -36,7 +37,7 @@ public class Resource extends ValueObject {
         return type;
     }
 
-    public enum Type{
+    public enum Type {
         VIDEO,
         TRAILER,
         BANNER,

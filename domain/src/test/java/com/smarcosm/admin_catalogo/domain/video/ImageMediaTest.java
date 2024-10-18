@@ -17,9 +17,9 @@ public class ImageMediaTest {
 
         // then
         Assertions.assertNotNull(actualImage);
-        Assertions.assertEquals(expectedChecksum, actualImage.getChecksum());
+        Assertions.assertEquals(expectedChecksum, actualImage.checksum());
         Assertions.assertEquals(expectedName, actualImage.name());
-        Assertions.assertEquals(expectedLocation, actualImage.getLocation());
+        Assertions.assertEquals(expectedLocation, actualImage.location());
     }
     @Test
     public void givenTwoImagesWithSameChecksumAndLocation_whenCallsEquals_ShouldReturnTrue(){

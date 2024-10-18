@@ -1,7 +1,6 @@
 package com.smarcosm.admin_catalogo.domain.video;
 
 import java.time.Instant;
-
 public record VideoPreview(
         String id,
         String title,

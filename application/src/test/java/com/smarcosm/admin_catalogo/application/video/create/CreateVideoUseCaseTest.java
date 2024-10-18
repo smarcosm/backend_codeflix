@@ -26,6 +26,7 @@ import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
+
 public class CreateVideoUseCaseTest extends UseCaseTest {
 
     @InjectMocks
@@ -1010,6 +1011,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         when(mediaResourceGateway.storeAudioVideo(any(), any())).thenAnswer(t -> {
             final var resource = t.getArgument(1, Resource.class);
             return AudioVideoMedia.with(
+                    IdUtils.uuid(),
                     IdUtils.uuid(),
                     resource.name(),
                     "/img",

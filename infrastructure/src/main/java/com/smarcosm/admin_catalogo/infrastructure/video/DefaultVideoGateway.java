@@ -8,6 +8,7 @@ import com.smarcosm.admin_catalogo.infrastructure.video.persistence.VideoJpaEnti
 import com.smarcosm.admin_catalogo.infrastructure.video.persistence.VideoRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 import static com.smarcosm.admin_catalogo.domain.utils.CollectionsUtils.mapTo;
 import static com.smarcosm.admin_catalogo.domain.utils.CollectionsUtils.nullIfEmpty;
-
+@Component
 public class DefaultVideoGateway implements VideoGateway {
     private final VideoRepository videoRepository;
 

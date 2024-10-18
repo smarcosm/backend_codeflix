@@ -3,6 +3,7 @@ package com.smarcosm.admin_catalogo.infrastructure.video.persistence;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberID;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
 import com.smarcosm.admin_catalogo.domain.genre.GenreID;
+import com.smarcosm.admin_catalogo.domain.utils.CollectionsUtils;
 import com.smarcosm.admin_catalogo.domain.video.Rating;
 import com.smarcosm.admin_catalogo.domain.video.Video;
 import com.smarcosm.admin_catalogo.domain.video.VideoID;
@@ -371,5 +372,17 @@ public class VideoJpaEntity {
     public VideoJpaEntity setCastMembers(Set<VideoCastMemberJpaEntity> castMembers) {
         this.castMembers = castMembers;
         return this;
+    }
+
+    public Set<CategoryID> getCategoriesID() {
+        return CollectionsUtils.mapTo(getCategories(), it -> CategoryID.from(it.getId().getCategoryId()));
+    }
+
+    public Set<GenreID> getGenresID() {
+        return CollectionsUtils.mapTo(getGenres(), it -> GenreID.from(it.getId().getGenreId()));
+    }
+
+    public Set<CastMemberID> getCastMembersID() {
+        return CollectionsUtils.mapTo(getCastMembers(), it -> CastMemberID.from(it.getId().getCastMemberId()));
     }
 }

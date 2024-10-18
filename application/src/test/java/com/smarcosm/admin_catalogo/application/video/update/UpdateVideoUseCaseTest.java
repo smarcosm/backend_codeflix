@@ -1122,9 +1122,8 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
             return AudioVideoMedia.with(
                     IdUtils.uuid(),
                     resource.name(),
-                    "/img",
-                    "",
-                    MediaStatus.PENDING
+                    "/img"
+
             );
         });
     }

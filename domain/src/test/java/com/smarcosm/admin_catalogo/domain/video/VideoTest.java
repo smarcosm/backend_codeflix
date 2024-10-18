@@ -10,19 +10,20 @@ import org.junit.jupiter.api.Test;
 import java.time.Year;
 import java.util.Set;
 
+
 public class VideoTest {
 
     @Test
     public void givenValidParams_whenCallsNewVideo_shouldInstantiate() {
-        //given
+        // given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = """
                 Disclaimer: o estudo de caso apresentado tem fins educacionais e representa nossas opiniões pessoais.
-                Esse video faz parte da Imersão Full Stack && Full Cycle.
+                Esse vídeo faz parte da Imersão Full Stack && Full Cycle.
                 Para acessar todas as aulas, lives e desafios, acesse:
                 https://imersao.fullcycle.com.br/
                 """;
-        final var expectedLaunchedAt = Year.of(2024);
+        final var expectedLaunchedAt = Year.of(2022);
         final var expectedDuration = 120.10;
         final var expectedOpened = false;
         final var expectedPublished = false;
@@ -46,7 +47,6 @@ public class VideoTest {
         );
 
         // then
-
         Assertions.assertNotNull(actualVideo);
         Assertions.assertNotNull(actualVideo.getId());
         Assertions.assertNotNull(actualVideo.getCreatedAt());
@@ -69,20 +69,19 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
 
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
-
     }
 
     @Test
     public void givenValidVideo_whenCallsUpdate_shouldReturnUpdated() {
-        //given
+        // given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = """
                 Disclaimer: o estudo de caso apresentado tem fins educacionais e representa nossas opiniões pessoais.
-                Esse video faz parte da Imersão Full Stack && Full Cycle.
+                Esse vídeo faz parte da Imersão Full Stack && Full Cycle.
                 Para acessar todas as aulas, lives e desafios, acesse:
                 https://imersao.fullcycle.com.br/
                 """;
-        final var expectedLaunchedAt = Year.of(2024);
+        final var expectedLaunchedAt = Year.of(2022);
         final var expectedDuration = 120.10;
         final var expectedOpened = false;
         final var expectedPublished = false;
@@ -119,11 +118,10 @@ public class VideoTest {
         );
 
         // then
-
         Assertions.assertNotNull(actualVideo);
         Assertions.assertNotNull(actualVideo.getId());
         Assertions.assertEquals(aVideo.getCreatedAt(), actualVideo.getCreatedAt());
-        Assertions.assertTrue(aVideo.getCreatedAt().isBefore(actualVideo.getUpdatedAt()));
+        Assertions.assertTrue(aVideo.getUpdatedAt().isBefore(actualVideo.getUpdatedAt()));
         Assertions.assertEquals(expectedTitle, actualVideo.getTitle());
         Assertions.assertEquals(expectedDescription, actualVideo.getDescription());
         Assertions.assertEquals(expectedLaunchedAt, actualVideo.getLaunchedAt());
@@ -141,20 +139,19 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
 
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
-
     }
 
     @Test
     public void givenValidVideo_whenCallsSetVideo_shouldReturnUpdated() {
-        //given
+        // given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = """
                 Disclaimer: o estudo de caso apresentado tem fins educacionais e representa nossas opiniões pessoais.
-                Esse video faz parte da Imersão Full Stack && Full Cycle.
+                Esse vídeo faz parte da Imersão Full Stack && Full Cycle.
                 Para acessar todas as aulas, lives e desafios, acesse:
                 https://imersao.fullcycle.com.br/
                 """;
-        final var expectedLaunchedAt = Year.of(2024);
+        final var expectedLaunchedAt = Year.of(2022);
         final var expectedDuration = 120.10;
         final var expectedOpened = false;
         final var expectedPublished = false;
@@ -175,13 +172,14 @@ public class VideoTest {
                 expectedGenres,
                 expectedMembers
         );
+
         final var aVideoMedia =
-                AudioVideoMedia.with("abc", "video.mp4", "/123/videos", "", MediaStatus.PENDING);
+                AudioVideoMedia.with("abc", "Video.mp4", "/123/videos");
+
         // when
         final var actualVideo = Video.with(aVideo).setVideo(aVideoMedia);
 
         // then
-
         Assertions.assertNotNull(actualVideo);
         Assertions.assertNotNull(actualVideo.getId());
         Assertions.assertEquals(aVideo.getCreatedAt(), actualVideo.getCreatedAt());
@@ -203,20 +201,19 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
 
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
-
     }
 
     @Test
     public void givenValidVideo_whenCallsSetTrailer_shouldReturnUpdated() {
-        //given
+        // given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = """
                 Disclaimer: o estudo de caso apresentado tem fins educacionais e representa nossas opiniões pessoais.
-                Esse video faz parte da Imersão Full Stack && Full Cycle.
+                Esse vídeo faz parte da Imersão Full Stack && Full Cycle.
                 Para acessar todas as aulas, lives e desafios, acesse:
                 https://imersao.fullcycle.com.br/
                 """;
-        final var expectedLaunchedAt = Year.of(2024);
+        final var expectedLaunchedAt = Year.of(2022);
         final var expectedDuration = 120.10;
         final var expectedOpened = false;
         final var expectedPublished = false;
@@ -237,13 +234,14 @@ public class VideoTest {
                 expectedGenres,
                 expectedMembers
         );
+
         final var aTrailerMedia =
-                AudioVideoMedia.with("abc", "trailer.mp4", "/123/videos", "", MediaStatus.PENDING);
+                AudioVideoMedia.with("abc", "Trailer.mp4", "/123/videos");
+
         // when
         final var actualVideo = Video.with(aVideo).setTrailer(aTrailerMedia);
 
         // then
-
         Assertions.assertNotNull(actualVideo);
         Assertions.assertNotNull(actualVideo.getId());
         Assertions.assertEquals(aVideo.getCreatedAt(), actualVideo.getCreatedAt());
@@ -265,20 +263,19 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
 
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
-
     }
 
     @Test
     public void givenValidVideo_whenCallsSetBanner_shouldReturnUpdated() {
-        //given
+        // given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = """
                 Disclaimer: o estudo de caso apresentado tem fins educacionais e representa nossas opiniões pessoais.
-                Esse video faz parte da Imersão Full Stack && Full Cycle.
+                Esse vídeo faz parte da Imersão Full Stack && Full Cycle.
                 Para acessar todas as aulas, lives e desafios, acesse:
                 https://imersao.fullcycle.com.br/
                 """;
-        final var expectedLaunchedAt = Year.of(2024);
+        final var expectedLaunchedAt = Year.of(2022);
         final var expectedDuration = 120.10;
         final var expectedOpened = false;
         final var expectedPublished = false;
@@ -299,13 +296,14 @@ public class VideoTest {
                 expectedGenres,
                 expectedMembers
         );
+
         final var aBannerMedia =
-                ImageMedia.with("abc", "banner.mp4", "/123/videos");
+                ImageMedia.with("abc", "Trailer.mp4", "/123/videos");
+
         // when
         final var actualVideo = Video.with(aVideo).setBanner(aBannerMedia);
 
         // then
-
         Assertions.assertNotNull(actualVideo);
         Assertions.assertNotNull(actualVideo.getId());
         Assertions.assertEquals(aVideo.getCreatedAt(), actualVideo.getCreatedAt());
@@ -327,20 +325,19 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
 
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
-
     }
 
     @Test
     public void givenValidVideo_whenCallsSetThumbnail_shouldReturnUpdated() {
-        //given
+        // given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = """
                 Disclaimer: o estudo de caso apresentado tem fins educacionais e representa nossas opiniões pessoais.
-                Esse video faz parte da Imersão Full Stack && Full Cycle.
+                Esse vídeo faz parte da Imersão Full Stack && Full Cycle.
                 Para acessar todas as aulas, lives e desafios, acesse:
                 https://imersao.fullcycle.com.br/
                 """;
-        final var expectedLaunchedAt = Year.of(2024);
+        final var expectedLaunchedAt = Year.of(2022);
         final var expectedDuration = 120.10;
         final var expectedOpened = false;
         final var expectedPublished = false;
@@ -361,13 +358,14 @@ public class VideoTest {
                 expectedGenres,
                 expectedMembers
         );
+
         final var aThumbMedia =
-                ImageMedia.with("abc", "banner.mp4", "/123/videos");
+                ImageMedia.with("abc", "Trailer.mp4", "/123/videos");
+
         // when
         final var actualVideo = Video.with(aVideo).setThumbnail(aThumbMedia);
 
         // then
-
         Assertions.assertNotNull(actualVideo);
         Assertions.assertNotNull(actualVideo.getId());
         Assertions.assertEquals(aVideo.getCreatedAt(), actualVideo.getCreatedAt());
@@ -389,20 +387,19 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
 
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
-
     }
 
     @Test
     public void givenValidVideo_whenCallsSetThumbnailHalf_shouldReturnUpdated() {
-        //given
+        // given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = """
                 Disclaimer: o estudo de caso apresentado tem fins educacionais e representa nossas opiniões pessoais.
-                Esse video faz parte da Imersão Full Stack && Full Cycle.
+                Esse vídeo faz parte da Imersão Full Stack && Full Cycle.
                 Para acessar todas as aulas, lives e desafios, acesse:
                 https://imersao.fullcycle.com.br/
                 """;
-        final var expectedLaunchedAt = Year.of(2024);
+        final var expectedLaunchedAt = Year.of(2022);
         final var expectedDuration = 120.10;
         final var expectedOpened = false;
         final var expectedPublished = false;
@@ -423,13 +420,14 @@ public class VideoTest {
                 expectedGenres,
                 expectedMembers
         );
+
         final var aThumbMedia =
-                ImageMedia.with("abc", "banner.mp4", "/123/videos");
+                ImageMedia.with("abc", "Trailer.mp4", "/123/videos");
+
         // when
         final var actualVideo = Video.with(aVideo).setThumbnailHalf(aThumbMedia);
 
         // then
-
         Assertions.assertNotNull(actualVideo);
         Assertions.assertNotNull(actualVideo.getId());
         Assertions.assertEquals(aVideo.getCreatedAt(), actualVideo.getCreatedAt());
@@ -450,27 +448,6 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getThumbnail().isEmpty());
         Assertions.assertEquals(aThumbMedia, actualVideo.getThumbnailHalf().get());
 
-
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
-
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
