@@ -24,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @E2ETest
 @Testcontainers
-
 public class CategoryE2ETest implements MockDsl {
 
     @Autowired
