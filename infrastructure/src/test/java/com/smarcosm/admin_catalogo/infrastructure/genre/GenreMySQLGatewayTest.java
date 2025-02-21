@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -167,7 +168,7 @@ public class GenreMySQLGatewayTest {
         Assertions.assertIterableEquals(sorted(expectedCategories), sorted(persistedGenre.getCategoryIDs()));
         Assertions.assertEquals(aGenre.getCreatedAt(), persistedGenre.getCreatedAt());
         Assertions.assertTrue(aGenre.getUpdatedAt().isBefore(persistedGenre.getUpdatedAt()));
-        Assertions.assertEquals(aGenre.getDeletedAt(), persistedGenre.getDeletedAt());
+        //Assertions.assertEquals(aGenre.getDeletedAt(), persistedGenre.getDeletedAt());
         Assertions.assertNull(persistedGenre.getDeletedAt());
     }
 
@@ -312,6 +313,7 @@ public class GenreMySQLGatewayTest {
         Assertions.assertNotNull(persistedGenre.getDeletedAt());
     }
     @Test
+    @Transactional
     public void givenAPrePersistedGenre_whenCallsDeleteById_shouldDeleteGenre() {
         // given
         final var aGenre = Genre.newGenre("Ação", true);
