@@ -123,7 +123,7 @@ public class GetVideoByIdUseCaseTest extends UseCaseTest {
     private ImageMedia image(final Resource.Type type){
         final var checksum= IdUtils.uuid();
         return ImageMedia.with(
-                checksum, type.name(), "/images" + checksum
+                checksum, checksum, type.name(), "/images" + checksum
         );
     }
 }
