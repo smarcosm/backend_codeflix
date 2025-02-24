@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
@@ -122,6 +123,7 @@ public class GenreMySQLGatewayTest {
     }
 
     @Test
+    @DirtiesContext
     public void givenAValidGenreWithoutCategories_whenCallsUpdateGenreWithCategories_shouldPersistGenre() {
         // given
         final var filmes =
@@ -314,6 +316,29 @@ public class GenreMySQLGatewayTest {
         Assertions.assertEquals(aGenre.getCreatedAt(), persistedGenre.getCreatedAt());
         Assertions.assertTrue(aGenre.getUpdatedAt().isBefore(persistedGenre.getUpdatedAt()));
         Assertions.assertNotNull(persistedGenre.getDeletedAt());
+    }
+
+    @Test
+    public void givenTwoGenresAndOnePersisted_whenCallsExistsByIds_shouldPersistedID() {
+        // given
+
+        final var aGenre = Genre.newGenre("Genre 1", true);
+        final var expectedItems = 1;
+        final var expectedId = aGenre.getId();
+
+        Assertions.assertEquals(0, genreRepository.count());
+
+        genreRepository.saveAndFlush(GenreJpaEntity.from(aGenre));
+
+        // when
+        final var actualGenre = genreGateway.existsByIds(List.of(GenreID.from("123"), expectedId));
+
+
+        // then
+        Assertions.assertEquals(expectedItems, actualGenre.size());
+        Assertions.assertEquals(expectedId.getValue(), actualGenre.get(0).getValue());
+
+
     }
 
     @Test
