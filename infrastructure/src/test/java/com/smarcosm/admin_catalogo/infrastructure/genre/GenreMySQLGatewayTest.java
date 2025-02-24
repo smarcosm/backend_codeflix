@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+
 @MySQLGatewayTest
 public class GenreMySQLGatewayTest {
 
@@ -168,7 +169,7 @@ public class GenreMySQLGatewayTest {
         Assertions.assertIterableEquals(sorted(expectedCategories), sorted(persistedGenre.getCategoryIDs()));
         Assertions.assertEquals(aGenre.getCreatedAt(), persistedGenre.getCreatedAt());
         Assertions.assertTrue(aGenre.getUpdatedAt().isBefore(persistedGenre.getUpdatedAt()));
-        //Assertions.assertEquals(aGenre.getDeletedAt(), persistedGenre.getDeletedAt());
+        Assertions.assertEquals(aGenre.getDeletedAt(), persistedGenre.getDeletedAt());
         Assertions.assertNull(persistedGenre.getDeletedAt());
     }
 
@@ -224,6 +225,7 @@ public class GenreMySQLGatewayTest {
         Assertions.assertEquals(aGenre.getDeletedAt(), persistedGenre.getDeletedAt());
         Assertions.assertNull(persistedGenre.getDeletedAt());
     }
+
     @Test
     public void givenAValidGenreInactive_whenCallsUpdateGenreActivating_shouldPersistGenre() {
         // given
@@ -268,6 +270,7 @@ public class GenreMySQLGatewayTest {
         Assertions.assertTrue(aGenre.getUpdatedAt().isBefore(persistedGenre.getUpdatedAt()));
         Assertions.assertNull(persistedGenre.getDeletedAt());
     }
+
     @Test
     public void givenAValidGenreActive_whenCallsUpdateGenreInactivating_shouldPersistGenre() {
         // given
@@ -312,8 +315,8 @@ public class GenreMySQLGatewayTest {
         Assertions.assertTrue(aGenre.getUpdatedAt().isBefore(persistedGenre.getUpdatedAt()));
         Assertions.assertNotNull(persistedGenre.getDeletedAt());
     }
+
     @Test
-    @Transactional
     public void givenAPrePersistedGenre_whenCallsDeleteById_shouldDeleteGenre() {
         // given
         final var aGenre = Genre.newGenre("Ação", true);
@@ -328,6 +331,7 @@ public class GenreMySQLGatewayTest {
         // then
         Assertions.assertEquals(0, genreRepository.count());
     }
+
     @Test
     public void givenAnInvalidGenre_whenCallsDeleteById_shouldReturnOK() {
         // given
@@ -339,6 +343,7 @@ public class GenreMySQLGatewayTest {
         // then
         Assertions.assertEquals(0, genreRepository.count());
     }
+
     @Test
     public void givenAPrePersistedGenre_whenCallsFindById_shouldReturnGenre() {
         // given
@@ -368,12 +373,12 @@ public class GenreMySQLGatewayTest {
         Assertions.assertEquals(expectedId, actualGenre.getId());
         Assertions.assertEquals(expectedName, actualGenre.getName());
         Assertions.assertEquals(expectedIsActive, actualGenre.isActive());
-        Assertions.assertEquals(new HashSet<>(expectedCategories), new HashSet<>(actualGenre.getCategories()));
-
+        Assertions.assertEquals(sorted(expectedCategories), sorted(actualGenre.getCategories()));
         Assertions.assertEquals(aGenre.getCreatedAt(), actualGenre.getCreatedAt());
         Assertions.assertEquals(aGenre.getUpdatedAt(), actualGenre.getUpdatedAt());
         Assertions.assertNull(actualGenre.getDeletedAt());
     }
+
     @Test
     public void givenAInvalidGenreId_whenCallsFindById_shouldReturnEmpty() {
         // given
@@ -387,6 +392,7 @@ public class GenreMySQLGatewayTest {
         // then
         Assertions.assertTrue(actualGenre.isEmpty());
     }
+
     @Test
     public void givenEmptyGenres_whenCallFindAll_shouldReturnEmptyList() {
         // given
@@ -452,7 +458,7 @@ public class GenreMySQLGatewayTest {
             "createdAt,asc,0,10,5,5,Comédia romântica",
             "createdAt,desc,0,10,5,5,Ficção científica",
     })
-    public void givenAValidSortAndDirection_whenCallsFindAll_shouldReturnFiltered(
+    public void givenAValidSortAndDirection_whenCallsFindAll_shouldReturnOrdered(
             final String expectedSort,
             final String expectedDirection,
             final int expectedPage,
@@ -485,7 +491,7 @@ public class GenreMySQLGatewayTest {
             "1,2,2,5,Drama;Ficção científica",
             "2,2,1,5,Terror",
     })
-    public void givenAValidSortAndDirection_whenCallsFindAll_shouldReturnFiltered(
+    public void givenAValidPaging_whenCallsFindAll_shouldReturnPaged(
             final int expectedPage,
             final int expectedPerPage,
             final int expectedItemsCount,
@@ -494,7 +500,6 @@ public class GenreMySQLGatewayTest {
     ) {
         // given
         mockGenres();
-
         final var expectedTerms = "";
         final var expectedSort = "name";
         final var expectedDirection = "asc";
@@ -528,6 +533,7 @@ public class GenreMySQLGatewayTest {
                 GenreJpaEntity.from(Genre.newGenre("Ficção científica", true))
         ));
     }
+
     private List<CategoryID> sorted(final List<CategoryID> expectedCategories) {
         return expectedCategories.stream()
                 .sorted(Comparator.comparing(CategoryID::getValue))

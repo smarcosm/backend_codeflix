@@ -2,19 +2,22 @@ package com.smarcosm.admin_catalogo.infrastructure.video;
 
 import com.smarcosm.admin_catalogo.IntegrationTest;
 import com.smarcosm.admin_catalogo.domain.Fixture;
+import com.smarcosm.admin_catalogo.domain.castmember.CastMember;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberGateway;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberID;
+import com.smarcosm.admin_catalogo.domain.category.Category;
 import com.smarcosm.admin_catalogo.domain.category.CategoryGateway;
 import com.smarcosm.admin_catalogo.domain.category.CategoryID;
+import com.smarcosm.admin_catalogo.domain.genre.Genre;
 import com.smarcosm.admin_catalogo.domain.genre.GenreGateway;
 import com.smarcosm.admin_catalogo.domain.genre.GenreID;
-import com.smarcosm.admin_catalogo.domain.video.AudioVideoMedia;
-import com.smarcosm.admin_catalogo.domain.video.ImageMedia;
-import com.smarcosm.admin_catalogo.domain.video.Video;
-import com.smarcosm.admin_catalogo.domain.video.VideoID;
+import com.smarcosm.admin_catalogo.domain.video.*;
 import com.smarcosm.admin_catalogo.infrastructure.video.persistence.VideoRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,18 +26,44 @@ import java.util.Set;
 
 @IntegrationTest
 public class DefaultVideoGatewayTest {
+
     @Autowired
     private DefaultVideoGateway videoGateway;
+
     @Autowired
     private CastMemberGateway castMemberGateway;
+
     @Autowired
     private CategoryGateway categoryGateway;
+
     @Autowired
     private GenreGateway genreGateway;
+
     @Autowired
     private VideoRepository videoRepository;
+
+    private CastMember wesley;
+    private CastMember sebastiao;
+
+    private Category aulas;
+    private Category lives;
+
+    private Genre tech;
+    private Genre business;
+
+    @BeforeEach
+    public void setUp() {
+        wesley = castMemberGateway.create(Fixture.CastMembers.wesley());
+        sebastiao = castMemberGateway.create(Fixture.CastMembers.sebastiao());
+
+        aulas = categoryGateway.create(Fixture.Categories.aulas());
+        lives = categoryGateway.create(Fixture.Categories.lives());
+
+        tech = genreGateway.create(Fixture.Genres.tech());
+        business = genreGateway.create(Fixture.Genres.business());
+    }
+
     @Test
-    @Transactional
     public void testInjection() {
         Assertions.assertNotNull(videoGateway);
         Assertions.assertNotNull(castMemberGateway);
@@ -42,13 +71,11 @@ public class DefaultVideoGatewayTest {
         Assertions.assertNotNull(genreGateway);
         Assertions.assertNotNull(videoRepository);
     }
+
     @Test
     @Transactional
     public void givenAValidVideo_whenCallsCreate_shouldPersistIt() {
         // given
-        final var wesley = castMemberGateway.create(Fixture.CastMembers.wesley());
-        final var aulas = categoryGateway.create(Fixture.Categories.aulas());
-        final var tech = genreGateway.create(Fixture.Genres.tech());
         final var expectedTitle = Fixture.title();
         final var expectedDescription = Fixture.Videos.description();
         final var expectedLaunchYear = Year.of(Fixture.year());
@@ -59,16 +86,22 @@ public class DefaultVideoGatewayTest {
         final var expectedCategories = Set.of(aulas.getId());
         final var expectedGenres = Set.of(tech.getId());
         final var expectedMembers = Set.of(wesley.getId());
+
         final AudioVideoMedia expectedVideo =
                 AudioVideoMedia.with("123", "video", "/media/video");
+
         final AudioVideoMedia expectedTrailer =
                 AudioVideoMedia.with("123", "trailer", "/media/trailer");
+
         final ImageMedia expectedBanner =
                 ImageMedia.with("123", "banner", "/media/banner");
+
         final ImageMedia expectedThumb =
                 ImageMedia.with("123", "thumb", "/media/thumb");
+
         final ImageMedia expectedThumbHalf =
                 ImageMedia.with("123", "thumbHalf", "/media/thumbHalf");
+
         final var aVideo = Video.newVideo(
                         expectedTitle,
                         expectedDescription,
@@ -86,29 +119,14 @@ public class DefaultVideoGatewayTest {
                 .setBanner(expectedBanner)
                 .setThumbnail(expectedThumb)
                 .setThumbnailHalf(expectedThumbHalf);
+
         // when
-        System.out.println("Before persisting: " + aVideo);
-        System.out.println("Actual Video: " + aVideo);
-        System.out.println("Video: " + aVideo.getVideo()); // Verifica o conteúdo do Optional
-        System.out.println("Trailer: " + aVideo.getTrailer());
-        System.out.println("Banner: " + aVideo.getBanner());
-        System.out.println("Thumbnail: " + aVideo.getThumbnail());
-        System.out.println("ThumbnailHalf: " + aVideo.getThumbnailHalf());
-
         final var actualVideo = videoGateway.create(aVideo);
-
-        System.out.println("After persisting: " + actualVideo);
-
-        System.out.println("Actual Video: " + actualVideo);
-        System.out.println("Video: " + actualVideo.getVideo()); // Verifica o conteúdo do Optional
-        System.out.println("Trailer: " + actualVideo.getTrailer());
-        System.out.println("Banner: " + actualVideo.getBanner());
-        System.out.println("Thumbnail: " + actualVideo.getThumbnail());
-        System.out.println("ThumbnailHalf: " + actualVideo.getThumbnailHalf());
 
         // then
         Assertions.assertNotNull(actualVideo);
         Assertions.assertNotNull(actualVideo.getId());
+
         Assertions.assertEquals(expectedTitle, actualVideo.getTitle());
         Assertions.assertEquals(expectedDescription, actualVideo.getDescription());
         Assertions.assertEquals(expectedLaunchYear, actualVideo.getLaunchedAt());
@@ -119,25 +137,13 @@ public class DefaultVideoGatewayTest {
         Assertions.assertEquals(expectedCategories, actualVideo.getCategories());
         Assertions.assertEquals(expectedGenres, actualVideo.getGenres());
         Assertions.assertEquals(expectedMembers, actualVideo.getCastMembers());
-        Assertions.assertTrue(actualVideo.getVideo().isPresent());
         Assertions.assertEquals(expectedVideo.name(), actualVideo.getVideo().get().name());
-
-        Assertions.assertTrue(actualVideo.getTrailer().isPresent());
         Assertions.assertEquals(expectedTrailer.name(), actualVideo.getTrailer().get().name());
-
-        Assertions.assertTrue(actualVideo.getBanner().isPresent());
         Assertions.assertEquals(expectedBanner.name(), actualVideo.getBanner().get().name());
-
-        Assertions.assertTrue(actualVideo.getThumbnail().isPresent());
         Assertions.assertEquals(expectedThumb.name(), actualVideo.getThumbnail().get().name());
-
-        Assertions.assertTrue(actualVideo.getThumbnailHalf().isPresent());
         Assertions.assertEquals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name());
 
-
-
-        final var persistedVideo = videoRepository.findById(actualVideo.getId().getValue()).orElseThrow(() -> new IllegalStateException("Video not found in repository"));
-        Assertions.assertNotNull(persistedVideo.getVideo()); // Verifique se o vídeo persistido tem o vídeo
+        final var persistedVideo = videoRepository.findById(actualVideo.getId().getValue()).get();
 
         Assertions.assertEquals(expectedTitle, persistedVideo.getTitle());
         Assertions.assertEquals(expectedDescription, persistedVideo.getDescription());
@@ -155,6 +161,7 @@ public class DefaultVideoGatewayTest {
         Assertions.assertEquals(expectedThumb.name(), persistedVideo.getThumbnail().getName());
         Assertions.assertEquals(expectedThumbHalf.name(), persistedVideo.getThumbnailHalf().getName());
     }
+
     @Test
     @Transactional
     public void givenAValidVideoWithoutRelations_whenCallsCreate_shouldPersistIt() {
@@ -169,6 +176,7 @@ public class DefaultVideoGatewayTest {
         final var expectedCategories = Set.<CategoryID>of();
         final var expectedGenres = Set.<GenreID>of();
         final var expectedMembers = Set.<CastMemberID>of();
+
         final var aVideo = Video.newVideo(
                 expectedTitle,
                 expectedDescription,
@@ -181,11 +189,14 @@ public class DefaultVideoGatewayTest {
                 expectedGenres,
                 expectedMembers
         );
+
         // when
         final var actualVideo = videoGateway.create(aVideo);
+
         // then
         Assertions.assertNotNull(actualVideo);
         Assertions.assertNotNull(actualVideo.getId());
+
         Assertions.assertEquals(expectedTitle, actualVideo.getTitle());
         Assertions.assertEquals(expectedDescription, actualVideo.getDescription());
         Assertions.assertEquals(expectedLaunchYear, actualVideo.getLaunchedAt());
@@ -201,7 +212,9 @@ public class DefaultVideoGatewayTest {
         Assertions.assertTrue(actualVideo.getBanner().isEmpty());
         Assertions.assertTrue(actualVideo.getThumbnail().isEmpty());
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
+
         final var persistedVideo = videoRepository.findById(actualVideo.getId().getValue()).get();
+
         Assertions.assertEquals(expectedTitle, persistedVideo.getTitle());
         Assertions.assertEquals(expectedDescription, persistedVideo.getDescription());
         Assertions.assertEquals(expectedLaunchYear, Year.of(persistedVideo.getYearLaunched()));
@@ -218,6 +231,7 @@ public class DefaultVideoGatewayTest {
         Assertions.assertNull(persistedVideo.getThumbnail());
         Assertions.assertNull(persistedVideo.getThumbnailHalf());
     }
+
     @Test
     @Transactional
     public void givenAValidVideo_whenCallsUpdate_shouldPersistIt() {
@@ -234,10 +248,6 @@ public class DefaultVideoGatewayTest {
                 Set.of(),
                 Set.of()
         ));
-
-        final var wesley = castMemberGateway.create(Fixture.CastMembers.wesley());
-        final var aulas = categoryGateway.create(Fixture.Categories.aulas());
-        final var tech = genreGateway.create(Fixture.Genres.tech());
 
         final var expectedTitle = Fixture.title();
         final var expectedDescription = Fixture.Videos.description();
@@ -329,8 +339,8 @@ public class DefaultVideoGatewayTest {
         Assertions.assertNotNull(persistedVideo.getCreatedAt());
         Assertions.assertTrue(persistedVideo.getUpdatedAt().isAfter(aVideo.getUpdatedAt()));
     }
+
     @Test
-    @Transactional
     public void givenAValidVideoId_whenCallsDeleteById_shouldDeleteIt() {
         // given
         final var aVideo = videoGateway.create(Video.newVideo(
@@ -356,7 +366,7 @@ public class DefaultVideoGatewayTest {
         // then
         Assertions.assertEquals(0, videoRepository.count());
     }
-    @Transactional
+
     @Test
     public void givenAnInvalidVideoId_whenCallsDeleteById_shouldDeleteIt() {
         // given
@@ -383,14 +393,10 @@ public class DefaultVideoGatewayTest {
         // then
         Assertions.assertEquals(1, videoRepository.count());
     }
-    @Transactional
+
     @Test
     public void givenAValidVideo_whenCallsFindById_shouldReturnIt() {
         // given
-        final var wesley = castMemberGateway.create(Fixture.CastMembers.wesley());
-        final var aulas = categoryGateway.create(Fixture.Categories.aulas());
-        final var tech = genreGateway.create(Fixture.Genres.tech());
-
         final var expectedTitle = Fixture.title();
         final var expectedDescription = Fixture.Videos.description();
         final var expectedLaunchYear = Year.of(Fixture.year());
@@ -460,7 +466,7 @@ public class DefaultVideoGatewayTest {
         Assertions.assertEquals(expectedThumb.name(), actualVideo.getThumbnail().get().name());
         Assertions.assertEquals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name());
     }
-    @Transactional
+
     @Test
     public void givenAInvalidVideoId_whenCallsFindById_shouldEmpty() {
         // given
@@ -484,5 +490,319 @@ public class DefaultVideoGatewayTest {
 
         // then
         Assertions.assertTrue(actualVideo.isEmpty());
+    }
+
+    @Test
+    public void givenEmptyParams_whenCallFindAll_shouldReturnAllList() {
+        // given
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 4;
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(),
+                Set.of()
+        );
+
+        // when
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedTotal, actualPage.items().size());
+    }
+
+    @Test
+    public void givenEmptyVideos_whenCallFindAll_shouldReturnEmptyList() {
+        // given
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 0;
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(),
+                Set.of()
+        );
+
+        // when
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedTotal, actualPage.items().size());
+    }
+
+    @Test
+    public void givenAValidCategory_whenCallFindAll_shouldReturnFilteredList() {
+        // given
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 2;
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(aulas.getId()),
+                Set.of()
+        );
+
+        // when
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedTotal, actualPage.items().size());
+
+        Assertions.assertEquals("21.1 Implementação dos testes integrados do findAll", actualPage.items().get(0).title());
+        Assertions.assertEquals("Aula de empreendedorismo", actualPage.items().get(1).title());
+    }
+
+    @Test
+    public void givenAValidCastMember_whenCallFindAll_shouldReturnFilteredList() {
+        // given
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 2;
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(wesley.getId()),
+                Set.of(),
+                Set.of()
+        );
+
+        // when
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedTotal, actualPage.items().size());
+
+        Assertions.assertEquals("Aula de empreendedorismo", actualPage.items().get(0).title());
+        Assertions.assertEquals("System Design no Mercado Livre na prática", actualPage.items().get(1).title());
+    }
+
+    @Test
+    public void givenAValidGenre_whenCallFindAll_shouldReturnFilteredList() {
+        // given
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 1;
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(),
+                Set.of(business.getId())
+        );
+
+        // when
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedTotal, actualPage.items().size());
+
+        Assertions.assertEquals("Aula de empreendedorismo", actualPage.items().get(0).title());
+    }
+
+    @Test
+    public void givenAllParameters_whenCallFindAll_shouldReturnFilteredList() {
+        // given
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "empreendedorismo";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 1;
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(wesley.getId()),
+                Set.of(aulas.getId()),
+                Set.of(business.getId())
+        );
+
+        // when
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedTotal, actualPage.items().size());
+
+        Assertions.assertEquals("Aula de empreendedorismo", actualPage.items().get(0).title());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0,2,2,5,Ação;Comédia romântica",
+            "1,2,2,5,Drama;Ficção científica",
+            "2,2,1,5,Terror",
+    })
+    public void givenAValidPaging_whenCallsFindAll_shouldReturnPaged(
+            final int expectedPage,
+            final int expectedPerPage,
+            final int expectedItemsCount,
+            final long expectedTotal,
+            final String expectedGenres
+    ) {
+
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "aç,0,10,1,1,Ação",
+            "dr,0,10,1,1,Drama",
+            "com,0,10,1,1,Comédia romântica",
+            "cien,0,10,1,1,Ficção científica",
+            "terr,0,10,1,1,Terror",
+    })
+    public void givenAValidTerm_whenCallsFindAll_shouldReturnFiltered(
+            final String expectedTerms,
+            final int expectedPage,
+            final int expectedPerPage,
+            final int expectedItemsCount,
+            final long expectedTotal,
+            final String expectedGenreName
+    ) {
+
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "name,asc,0,10,5,5,Ação",
+            "name,desc,0,10,5,5,Terror",
+            "createdAt,asc,0,10,5,5,Comédia romântica",
+            "createdAt,desc,0,10,5,5,Ficção científica",
+    })
+    public void givenAValidSortAndDirection_whenCallsFindAll_shouldReturnOrdered(
+            final String expectedSort,
+            final String expectedDirection,
+            final int expectedPage,
+            final int expectedPerPage,
+            final int expectedItemsCount,
+            final long expectedTotal,
+            final String expectedGenreName
+    ) {
+
+    }
+
+    private void mockVideos() {
+        videoGateway.create(Video.newVideo(
+                "System Design no Mercado Livre na prática",
+                Fixture.Videos.description(),
+                Year.of(2022),
+                Fixture.duration(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Fixture.Videos.rating(),
+                Set.of(lives.getId()),
+                Set.of(tech.getId()),
+                Set.of(wesley.getId(), sebastiao.getId())
+        ));
+
+        videoGateway.create(Video.newVideo(
+                "Não cometa esses erros ao trabalhar com Microsserviços",
+                Fixture.Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Fixture.Videos.rating(),
+                Set.of(),
+                Set.of(),
+                Set.of()
+        ));
+
+        videoGateway.create(Video.newVideo(
+                "21.1 Implementação dos testes integrados do findAll",
+                Fixture.Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Fixture.Videos.rating(),
+                Set.of(aulas.getId()),
+                Set.of(tech.getId()),
+                Set.of(sebastiao.getId())
+        ));
+
+        videoGateway.create(Video.newVideo(
+                "Aula de empreendedorismo",
+                Fixture.Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Fixture.Videos.rating(),
+                Set.of(aulas.getId()),
+                Set.of(business.getId()),
+                Set.of(wesley.getId())
+        ));
     }
 }
