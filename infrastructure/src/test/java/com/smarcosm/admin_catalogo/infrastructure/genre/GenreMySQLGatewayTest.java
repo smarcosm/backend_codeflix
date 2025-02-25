@@ -123,7 +123,6 @@ public class GenreMySQLGatewayTest {
     }
 
     @Test
-    @DirtiesContext
     public void givenAValidGenreWithoutCategories_whenCallsUpdateGenreWithCategories_shouldPersistGenre() {
         // given
         final var filmes =

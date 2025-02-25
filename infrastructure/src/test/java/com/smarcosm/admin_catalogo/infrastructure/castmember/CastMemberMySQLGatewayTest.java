@@ -4,9 +4,12 @@ import com.smarcosm.admin_catalogo.MySQLGatewayTest;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMember;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberID;
 import com.smarcosm.admin_catalogo.domain.castmember.CastMemberType;
+import com.smarcosm.admin_catalogo.domain.genre.Genre;
+import com.smarcosm.admin_catalogo.domain.genre.GenreID;
 import com.smarcosm.admin_catalogo.domain.pagination.SearchQuery;
 import com.smarcosm.admin_catalogo.infrastructure.castmember.persistence.CastMemberJpaEntity;
 import com.smarcosm.admin_catalogo.infrastructure.castmember.persistence.CastMemberRepository;
+import com.smarcosm.admin_catalogo.infrastructure.genre.persistence.GenreJpaEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -97,6 +100,27 @@ class CastMemberMySQLGatewayTest {
         Assertions.assertTrue(aMember.getUpdatedAt().isBefore(persistedMember.getUpdatedAt()));
     }
 
+    @Test
+    public void givenTwoGenresAndOnePersisted_whenCallsExistsByIds_shouldPersistedID() {
+        // given
+
+        final var aMember = CastMember.newMember("Vin", CastMemberType.DIRECTOR);
+        final var expectedItems = 1;
+        final var expectedId = aMember.getId();
+
+        Assertions.assertEquals(0, castMemberRepository.count());
+
+        castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
+
+        // when
+        final var actualMember = castMemberGateway.existsByIds(List.of(CastMemberID.from("123"), expectedId));
+
+        // then
+        Assertions.assertEquals(expectedItems, actualMember.size());
+        Assertions.assertEquals(expectedId.getValue(), actualMember.get(0).getValue());
+
+
+    }
     @Test
     public void givenAValidCastMember_whenCallsDeleteById_shouldDeleteIt() {
         // given

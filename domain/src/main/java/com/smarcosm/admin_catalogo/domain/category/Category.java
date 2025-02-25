@@ -1,6 +1,7 @@
 package com.smarcosm.admin_catalogo.domain.category;
 
 import com.smarcosm.admin_catalogo.domain.AggregateRoot;
+import com.smarcosm.admin_catalogo.domain.utils.InstantUtils;
 import com.smarcosm.admin_catalogo.domain.validation.ValidationHandler;
 
 import java.math.BigDecimal;
@@ -8,7 +9,8 @@ import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.Objects;
 
-public class Category extends AggregateRoot<CategoryID> implements Cloneable{
+
+public class Category extends AggregateRoot<CategoryID> implements Cloneable {
     private String name;
     private String description;
     private boolean active;
@@ -30,23 +32,17 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable{
         this.description = aDescription;
         this.active = isActive;
         this.createdAt = Objects.requireNonNull(aCreationDate, "'createdAt' should not be null");
-        this.updatedAt = Objects.requireNonNull(aUpdateDate, "'updateAt' should not be null");
+        this.updatedAt = Objects.requireNonNull(aUpdateDate, "'updatedAt' should not be null");
         this.deletedAt = aDeleteDate;
     }
-    private static Instant roundInstant(Instant instant, int precision) {
-        long seconds = instant.getEpochSecond();
-        int nanos = instant.getNano();
-        BigDecimal totalSeconds = BigDecimal.valueOf(seconds).add(BigDecimal.valueOf(nanos, 9));
-        BigDecimal roundedSeconds = totalSeconds.setScale(precision, RoundingMode.HALF_UP);
-        long roundedNanos = roundedSeconds.movePointRight(9).longValueExact();
-        return Instant.ofEpochSecond(roundedNanos / 1_000_000_000, roundedNanos % 1_000_000_000);
-    }
-    public static Category newCategory(final String aName, final String aDescription, final boolean isActive){
+
+    public static Category newCategory(final String aName, final String aDescription, final boolean isActive) {
         final var id = CategoryID.unique();
-        final var now = roundInstant(Instant.now(), 6);
+        final var now = InstantUtils.now();
         final var deletedAt = isActive ? null : now;
         return new Category(id, aName, aDescription, isActive, now, now, deletedAt);
     }
+
     public static Category with(
             final CategoryID anId,
             final String name,
@@ -55,7 +51,7 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable{
             final Instant createdAt,
             final Instant updatedAt,
             final Instant deletedAt
-    ){
+    ) {
         return new Category(
                 anId,
                 name,
@@ -67,7 +63,7 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable{
         );
     }
 
-    public static Category with(final Category aCategory){
+    public static Category with(final Category aCategory) {
         return with(
                 aCategory.getId(),
                 aCategory.name,
@@ -81,38 +77,42 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable{
 
     @Override
     public void validate(final ValidationHandler handler) {
-    new CategoryValidator(this, handler).validate();
+        new CategoryValidator(this, handler).validate();
     }
+
     public Category activate() {
         this.deletedAt = null;
         this.active = true;
-        this.updatedAt = roundInstant(Instant.now(), 6);
+        this.updatedAt = InstantUtils.now();
         return this;
     }
+
     public Category deactivate() {
-        if (getDeletedAt() == null){
-            this.deletedAt = roundInstant(Instant.now(), 6);
+        if (getDeletedAt() == null) {
+            this.deletedAt = InstantUtils.now();
         }
 
         this.active = false;
-        this.updatedAt = roundInstant(Instant.now(), 6);
+        this.updatedAt = InstantUtils.now();
         return this;
     }
+
     public Category update(
             final String aName,
             final String aDescription,
             final boolean isActive
     ) {
-        if (isActive){
+        if (isActive) {
             activate();
-        }else {
+        } else {
             deactivate();
         }
         this.name = aName;
         this.description = aDescription;
-        this.updatedAt = roundInstant(Instant.now(), 6);
+        this.updatedAt = Instant.now();
         return this;
     }
+
     public CategoryID getId() {
         return id;
     }
